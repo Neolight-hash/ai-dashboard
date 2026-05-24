@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI打卡网 · 2026-05-24</title>
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --bg2: #1a1a1a;
+    --bg3: #222;
+    --bg4: #2a2a2a;
+    --text: #f0f0f0;
+    --text2: #b0b0b0;
+    --text3: #777;
+    --border: rgba(255,255,255,0.1);
+    --accent: #e8622a;
+    --accent2: #f08040;
+    --accent3: #f8b070;
+    --card-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --font: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+    --transition: 0.25s ease;
+  }
+  .light {
+    --bg: #fafafa;
+    --bg2: #fff;
+    --bg3: #f3f3f3;
+    --bg4: #e8e8e8;
+    --text: #1a1a1a;
+    --text2: #555;
+    --text3: #999;
+    --border: rgba(0,0,0,0.1);
+    --card-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 14px;
+    line-height: 1.6;
+    transition: background var(--transition), color var(--transition);
+  }
+  .hero {
+    background: linear-gradient(135deg, #b83010 0%, #e8622a 40%, #f08040 70%, #f8b070 100%);
+    padding: 48px 24px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 30%, rgba(255,255,255,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-inner { max-width: 960px; margin: 0 auto; position: relative; z-index: 1; }
+  .hero-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; }
+  .hero-badge {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.05em;
+  }
+  .theme-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 12px;
+    color: #fff;
+    cursor: pointer;
+    font-family: var(--font);
+    transition: background var(--transition);
+  }
+  .theme-btn:hover { background: rgba(255,255,255,0.28); }
+  .hero-title {
+    font-size: clamp(28px, 6vw, 52px);
+    font-weight: 800;
+    color: #fff;
+    margin: 20px 0 6px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    letter-spacing: -0.02em;
+  }
+  .hero-subtitle { font-size: 14px; color: rgba(255,255,255,0.8); margin-bottom: 28px; }
+  .hero-stats { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
+  .stat-chip {
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    padding: 10px 18px;
+    text-align: center;
+    min-width: 90px;
+    cursor: pointer;
+    transition: background var(--transition), border-color var(--transition), transform var(--transition);
+  }
+  .stat-chip:hover {
+    background: rgba(255,255,255,0.15);
+    border-color: rgba(255,255,255,0.4);
+    transform: translateY(-1px);
+  }
+  .stat-chip .num { font-size: 26px; font-weight: 800; color: #fff; line-height: 1; }
+  .stat-chip .lbl { font-size: 11px; color: rgba(255,255,255,0.75); margin-top: 3px; }
+  .donut-wrap {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+  }
+  .donut-svg { flex-shrink: 0; }
+  .donut-legend { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+  .donut-legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.85); cursor: pointer; }
+  .donut-legend-item .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .sticky-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    padding: 0 16px;
+    transition: background var(--transition);
+  }
+  .nav-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 8px 0;
+  }
+  .nav-inner::-webkit-scrollbar { display: none; }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--text2);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all var(--transition);
+    border: 1px solid transparent;
+  }
+  .nav-link:hover { background: var(--bg3); color: var(--text); }
+  .nav-link.active { background: var(--accent); color: #fff; }
+  .nav-badge {
+    background: rgba(255,255,255,0.25);
+    border-radius: 10px;
+    padding: 1px 7px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .toolbar {
+    max-width: 960px;
+    margin: 24px auto 0;
+    padding: 0 16px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .search-box {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+  }
+  .search-input {
+    width: 100%;
+    background: var(--bg2);
+    border: 2px solid var(--accent);
+    border-radius: 28px;
+    padding: 12px 18px 12px 46px;
+    font-size: 15px;
+    color: var(--text);
+    font-family: var(--font);
+    transition: all 0.25s ease;
+    outline: none;
+    box-shadow: 0 2px 12px rgba(232,98,42,0.12);
+  }
+  .search-input::placeholder { color: var(--text3); font-size: 14px; }
+  .search-input:focus { border-color: var(--accent2); box-shadow: 0 0 0 4px rgba(232,98,42,0.18), 0 4px 16px rgba(232,98,42,0.10); }
+  .search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    font-size: 17px;
+    pointer-events: none;
+    font-weight: 700;
+  }
+  .search-clear {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--bg4);
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    color: var(--text2);
+    font-size: 13px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  .search-clear:hover { background: var(--accent); color: #fff; }
+  .search-clear.show { display: flex; }
+  .read-progress {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    border-radius: 16px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 16px rgba(232,98,42,0.30);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    min-width: 130px;
+  }
+  .read-progress:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 24px rgba(232,98,42,0.40); }
+  .read-progress-label { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+  .read-progress-label .icon { font-size: 16px; }
+  .read-bar {
+    height: 6px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 3px;
+    width: 100%;
+    overflow: hidden;
+  }
+  .read-bar-fill {
+    height: 100%;
+    background: #fff;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 6px rgba(255,255,255,0.5);
+  }
+  .search-count {
+    font-size: 13px;
+    color: var(--text3);
+    white-space: nowrap;
+  }
+  .nav-date-area {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .nav-date-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 12px;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all var(--transition);
+    font-family: var(--font);
+  }
+  .nav-date-btn:hover:not(:disabled) { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .nav-date-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .nav-date-label { font-size: 12px; color: var(--text3); }
+  .main { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 40px 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-header:first-child { margin-top: 8px; }
+  .section-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 18px; font-weight: 700; color: var(--text); }
+  .section-count {
+    background: var(--bg3);
+    border-radius: 10px;
+    padding: 2px 10px;
+    font-size: 12px;
+    color: var(--text3);
+    margin-left: auto;
+  }
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--card-shadow);
+    transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition), border-color var(--transition);
+    opacity: 0;
+    transform: translateY(18px);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .card.visible { opacity: 1; transform: translateY(0); }
+  .card.read { opacity: 0.5; }
+  .card.read::after {
+    content: '已读';
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--bg4);
+    color: var(--text3);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); border-color: var(--accent); }
+  .card.hidden { display: none !important; }
+  .card.highlight { border-color: var(--accent2); background: rgba(232,98,42,0.06); }
+  .card-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px; height: 24px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+  .card-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .card-title { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.5; flex: 1; }
+  .card-title mark {
+    background: rgba(232,98,42,0.3);
+    color: var(--accent2);
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+  .card-source {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 9px;
+    font-size: 11px;
+    color: var(--text3);
+    margin-bottom: 10px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .card-summary {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.65;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    word-break: break-word;
+  }
+  .card-summary.collapsed {
+    max-height: 4.95em;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .card-summary.expanded {
+    -webkit-line-clamp: unset;
+    display: block;
+    max-height: 800px;
+  }
+  .card-footer { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .expand-btn {
+    background: none;
+    border: none;
+    color: var(--accent2);
+    font-size: 12px;
+    cursor: pointer;
+    font-family: var(--font);
+    padding: 0;
+    transition: color var(--transition);
+  }
+  .expand-btn:hover { color: var(--accent); }
+  .source-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    text-decoration: none;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: opacity var(--transition);
+  }
+  .source-btn:hover { opacity: 0.85; }
+  .read-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: var(--text3);
+    cursor: pointer;
+    font-family: var(--font);
+    transition: all var(--transition);
+  }
+  .read-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .time-badge { font-size: 11px; color: var(--text3); display: block; margin-bottom: 8px; }
+  .analytics-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .analytics-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+  }
+  .analytics-title { font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 14px; }
+  .source-rank-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 13px; cursor: pointer; transition: opacity var(--transition); }
+  .source-rank-item:hover { opacity: 0.75; }
+  .source-rank-bar-bg { flex: 1; height: 6px; background: var(--bg4); border-radius: 3px; overflow: hidden; }
+  .source-rank-bar { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .source-rank-name { width: 120px; color: var(--text2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
+  .source-rank-count { width: 20px; color: var(--text3); text-align: right; font-size: 12px; }
+  .hotwords-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+  .hotword-chip {
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    color: #fff;
+    cursor: pointer;
+    transition: transform var(--transition);
+  }
+  .hotword-chip:hover { transform: scale(1.08); }
+  .no-results { text-align: center; padding: 60px 20px; color: var(--text3); display: none; }
+  .no-results.show { display: block; }
+  .no-results-icon { font-size: 36px; margin-bottom: 12px; }
+  .loading-overlay {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.4s;
+  }
+  .spinner {
+    width: 40px; height: 40px;
+    border: 3px solid var(--bg4);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .footer {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 16px 40px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text3);
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+  }
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .modal h3 { font-size: 16px; margin-bottom: 16px; color: var(--text); }
+  .date-picker {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: var(--text);
+    font-family: var(--font);
+    margin-bottom: 14px;
+    outline: none;
+  }
+  .date-picker:focus { border-color: var(--accent); }
+  .modal-btns { display: flex; gap: 10px; }
+  .modal-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: var(--font);
+    transition: all var(--transition);
+  }
+  .modal-btn.primary { background: var(--accent); border: none; color: #fff; font-weight: 600; }
+  .modal-btn.primary:hover { background: var(--accent2); }
+  .modal-btn.secondary { background: none; border: 1px solid var(--border); color: var(--text2); }
+  .modal-btn.secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 13px;
+    color: var(--text);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    z-index: 500;
+    transition: transform 0.3s ease;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  @media (max-width: 600px) {
+    .analytics-wrap { grid-template-columns: 1fr; }
+    .hero-title { font-size: 28px; }
+    .card-grid { grid-template-columns: 1fr; }
+    .nav-date-area { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="loading-overlay" id="loadingOverlay"><div class="spinner"></div></div>
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3>查看历史日報</h3>
+    <input type="date" class="date-picker" id="datePicker" value="2026-05-24" max="2026-05-24">
+    <div class="modal-btns">
+      <button class="modal-btn secondary" onclick="closeModal()">取消</button>
+      <button class="modal-btn primary" onclick="goToDate()">前往</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-top">
+      <span class="hero-badge">AI打卡网 · 每日晨报</span>
+      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">亮色模式</button>
+    </div>
+    <h1 class="hero-title" id="heroTitle">AI打卡网</h1>
+    <p class="hero-subtitle" id="heroSubtitle">加载中…</p>
+    <div class="hero-stats" id="heroStats"></div>
+    <div class="donut-wrap" id="donutWrap">
+      <svg class="donut-svg" id="donutSvg" width="100" height="100" viewBox="0 0 100 100"></svg>
+      <div class="donut-legend" id="donutLegend"></div>
+    </div>
+  </div>
+</div>
+<div class="sticky-nav">
+  <div class="nav-inner" id="navInner">
+    <a class="nav-link active" href="#top" onclick="reloadToday()">全部</a>
+    <div class="nav-date-area">
+      <button class="nav-date-btn" id="prevBtn" onclick="navigateDate(-1)">昨天</button>
+      <span class="nav-date-label" id="navDateLabel">2026-05-24</span>
+      <button class="nav-date-btn" id="nextBtn" onclick="navigateDate(1)" disabled>明天</button>
+      <button class="nav-date-btn" onclick="openModal()">日历</button>
+    </div>
+  </div>
+</div>
+<div class="toolbar">
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="searchInput" type="text" placeholder="搜索标题、来源、摘要…" oninput="doSearch(this.value)">
+    <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+  </div>
+  <div class="read-progress" id="readProgress" onclick="toggleReadFilter()">
+    <span id="readLabel"><span class="read-progress-label"><span class="icon">🕐</span><span>已打卡 0/0</span></span></span>
+    <div class="read-bar"><div class="read-bar-fill" id="readBarFill" style="width:0%"></div></div>
+  </div>
+  <span class="search-count" id="searchCount"></span>
+</div>
+<div class="main" id="main">
+  <div class="analytics-wrap" id="analyticsWrap"></div>
+  <div id="noResults" class="no-results">
+    <div class="no-results-icon">🔎</div>
+    <p>没有找到匹配的资讯</p>
+    <p style="font-size:12px; margin-top:6px">试试其他关键词？</p>
+  </div>
+</div>
+<div class="footer" id="footerEl"></div>
+<script type="application/json" id="dataSrc">
+{"date": "2026-05-24", "generatedAt": "2026-05-24T00:00:00.568Z", "lead": null, "totalItems": 50, "items": [{"id": "cmpj9ln4013s6sljw06oz5ujz", "title": "OpenClaw 2026.5.22发布：性能优化与安全加固", "title_en": "OpenClaw 2026.5.22 is live ⚡ Gateway/model startup paths got leaner 🧠 /models drops to ~5ms 🔒 npm…", "url": "https://x.com/openclaw/status/2058397616124072274", "source": "X：OpenClaw (@openclaw)", "publishedAt": "2026-05-24T04:00:09.000Z", "summary": "OpenClaw 2026.5.22 已上线\n\n⚡ Gateway/模型启动路径更精简\n🧠 /models 响应时间降至约5毫秒\n🔒 npm包现提供锁定依赖项\n🪟 Windows安装/更新路径更安全\n\n等待更少，意外更少。\nhttps：//github.com/openclaw/openclaw/releases/tag/v2026.5.22", "category": "ai-products"}, {"id": "cmpivt5vv10hnsljwzwzhpe7k", "title": "StepAudio 2.5实时语音发布：副语言感知与人格化交互", "title_en": "StepAudio 2.5 Realtime is live！ Real-time voice that picks up what you actually mean - tone， pace，…", "url": "https://x.com/StepFun_ai/status/2058303294544425197", "source": "X：阶跃星辰 StepFun (@StepFun_ai)", "publishedAt": "2026-05-23T21:45:21.000Z", "summary": "StepAudio 2.5 Realtime是一款实时语音模型，能够深度理解用户语音中的语气、语速、停顿乃至微表情等副语言特征。它支持通过API接入自定义人格，允许设定个性、背景故事和语言风格，并提供了上万种原生人格选项，可组合出数百万种特征。产品还内置了5个可直接体验的预设人格，并经过RLHF调优，确保在复杂的角色扮演压力测试中也能保持角色一致性。该模型支持中文和英文。", "category": "ai-products"}, {"id": "cmpiq2r6p0z5bsljwnmtrw2la", "title": "Replit Agent与Squidler集成，实现全自动化AI质量保障", "title_en": "Replit Agent builds your app. Squidler tests it like a real user. Replit Agent fixes what's broken. …", "url": "https://x.com/Replit/status/2058261705998602548", "source": "X：Replit (@Replit)", "publishedAt": "2026-05-23T19:00:06.000Z", "summary": "Replit Agent与Squidler已完成集成，形成一套完整的AI驱动质量保障闭环。用户可通过自然语言描述应用功能，由Replit Agent负责构建。构建完成后，Squidler会像真实用户一样对线上应用进行自动化测试，无需编写任何测试脚本。测试中发现的问题会自动反馈给Replit Agent进行修复。该流程已通过Squidler加入Replit的MCP库正式上线，实现了从构建、测试到修复的全自动化，显著降低了应用测试与维护的门槛。", "category": "ai-products"}, {"id": "cmpijo6pj0xnmsljwps8cgh8g", "title": "消息称 Anthropic 最快下周完成逾 300 亿美元融资，有望推动估值反超 OpenAI", "title_en": null, "url": "https://www.ithome.com/0/954/452.htm", "source": "IT之家（RSS）", "publishedAt": "2026-05-23T15:12:40.000Z", "summary": "据彭博社报道，Anthropic即将完成一轮超300亿美元的融资，最快可能于下周敲定。此轮融资将使其估值突破9000亿美元，正式超越OpenAI，成为全球估值最高的AI初创企业。融资的迅速推进反映了市场的强烈追捧。同时，公司营收高速增长，预计第二季度营收将达109亿美元，环比增长超一倍，有望迎来首个盈利季度。", "category": "industry"}, {"id": "cmpi5yk550udosljwr18jxglb", "title": "加倍投入科学以赢得工业AI", "title_en": "Doubling Down on Science to Win Industrial AI May 22， 2026 Mistral AI", "url": "https://mistral.ai/news/science-to-win-industrial-ai", "source": "Mistral AI：News（网页）", "publishedAt": "2026-05-23T09:46:00.745Z", "summary": "Mistral AI宣布与物理AI先驱Emmi AI达成最终收购协议，旨在加强其在工业AI领域的领导地位。通过整合Emmi AI在物理仿真与数字孪生方面的专长，Mistral AI将提升其工程解决方案能力，并加速科学研发路线。Emmi AI的30余名研究员与工程师将加入Mistral AI团队，共同构建由物理AI驱动的综合技术栈。此次合作将为航空航天、汽车等高风险行业提供实时仿真与复杂问题解决平台，推动工业研发的突破性进展。", "category": "industry"}, {"id": "cmpi0q0io0t35sljw0xlwakj6", "title": "飞书-Claude Code桥接开源项目", "title_en": "如果你同时用飞书和 Claude Code 的话，Zara Zhang这个开源项目 feishu-claude-code-bridge 值得一试，它可以让你在飞书里面直接连接 Claude Code，…", "url": "https://x.com/dotey/status/2058084478459826432", "source": "X：宝玉 (@dotey)", "publishedAt": "2026-05-23T07:15:51.000Z", "summary": "feishu-claude-code-bridge是一个开源项目，可实现飞书与本机Claude Code CLI的双向连接。用户能从飞书消息中直接指挥Claude Code执行任务，Claude也能读取飞书中的工作上下文并创建、编辑飞书文档。其工作原理是将飞书消息转为Prompt通过命令行调用Claude CLI，并将流式输出实时同步回飞书。该模式可扩展连接Codex等其他本地工具。需注意，2026年6月15日起，Claude订阅计划对`claude -p`模式将独立计费。", "category": "tip"}, {"id": "cmphwpi4y0s4ysljwoypw5kck", "title": "微软称，使用人工智能的成本高于支付人工工资", "title_en": null, "url": "https://fortune.com/2026/05/22/microsoft-ai-cost-problem-tokens-agents", "source": "Hacker News 热门（buzzing.cc 中文翻译）", "publishedAt": "2026-05-23T05:23:21.531Z", "summary": "微软发布报告指出，在特定工作场景中，部署和使用人工智能（AI）的成本目前已高于支付相应的人工工资。报告分析了基于\"tokens\"（令牌）和\"agents\"（智能体）的AI使用模式，发现其综合开销超过了雇佣人类员工完成同类任务的费用。这一发现揭示了当前企业应用AI技术面临的现实经济挑战。", "category": "industry"}, {"id": "cmphqn8pz0qnlsljwi7q35oae", "title": "Kling AI亮相戛纳，推动AI赋能电影制作", "title_en": "Debut in Cannes | Kling AI Conference Highlights On May 18， Kling AI hosted its official conference…", "url": "https://x.com/Kling_ai/status/2058013861404684739", "source": "X：可灵 Kling AI (@Kling_ai)", "publishedAt": "2026-05-23T02:35:15.000Z", "summary": "Kling AI在戛纳电影市场（Marché du Film）举办官方会议，首次登上这一世界顶级电影舞台。会议汇集全球电影专业人士，共同探讨AI如何融入实际电影制作流程。Kling AI已证明其能力可服务于动画长片、好莱坞剧集、实验短片及影院电影等多种创作形式。未来，Kling AI将继续推进电影级AI影像技术，与全球创作者合作，将更多\"不可能\"的故事呈现在银幕上。", "category": "industry"}, {"id": "cmphp7csm0qaxsljwnztpsgpc", "title": "Models.dev：一个关于人工智能模型规格、定价和功能的开源数据库", "title_en": null, "url": "https://github.com/anomalyco/models.dev", "source": "Hacker News 热门（buzzing.cc 中文翻译）", "publishedAt": "2026-05-23T01:39:14.985Z", "summary": "近期发布了开源数据库Models.dev，专门收录人工智能模型的各项规格、定价及功能信息。该项目在GitHub公开，便于开发者查询和比较不同AI模型。其在Hacker News社区获得101点关注度，显示出技术社区对这类集中化、透明化的模型信息资源的较大兴趣。", "category": "ai-products"}, {"id": "cmphmn2560pnrsljwzrhpl8vs", "title": "扩大与新加坡合作，推动AI安全规模化部署", "title_en": "We're expanding our partnership with Singapore to help safely deploy AI at scale. 🇸🇬 Together wit…", "url": "https://x.com/GoogleDeepMind/status/2057985225100235022", "source": "X：Google DeepMind (@GoogleDeepMind)", "publishedAt": "2026-05-23T00:41:27.000Z", "summary": "我们正在扩大与新加坡的合作，以帮助安全地大规模部署AI。🇸🇬\n\n与各国专家合作，我们的新项目将重点加速科学发现、加强大流行病防范并改善医疗保健。\n\n了解更多 → https：//goo.gle/49jGwjv", "category": "industry"}, {"id": "cmphld9mr0pcfsljwy8xhd1kg", "title": "AI 替代入门级工作：科技行业受裁员冲击最重，74% CEO 冻结或缩减招聘", "title_en": null, "url": "https://www.ithome.com/0/954/235.htm", "source": "IT之家（RSS）", "publishedAt": "2026-05-23T00:05:55.000Z", "summary": "奥纬咨询研究发现，AI工具正被广泛用于入门级任务，导致企业招聘重心转向高级岗位，年轻人求职难度加大。科技行业受冲击最严重，74%的CEO已冻结或缩减招聘。计划削减初级岗位的比例从17%跃升至43%，而招聘转向中层岗位的比例则升至30%。尽管超90%的企业在部署AI，但多数仍处试点阶段。报告警告，过快裁员或忽视初级人才储备，可能对人才梯队造成长远风险。", "category": "industry"}, {"id": "cmphlmb8l0peosljw5rpq8dt2", "title": "Nemotron-Labs 扩散语言模型实现光速级文本生成", "title_en": "Towards Speed-of-Light Text Generation with Nemotron-Labs Diffusion Language Models", "url": "https://huggingface.co/blog/nvidia/nemotron-labs-diffusion", "source": "Hugging Face：Blog（RSS）", "publishedAt": "2026-05-23T00:02:03.000Z", "summary": "NVIDIA 在 Hugging Face 发布了关于 Nemotron-Labs 扩散语言模型的技术博客。该研究聚焦于通过扩散语言模型架构大幅提升文本生成速度，目标是逼近\"光速级\"生成效率。文章可能介绍了该模型在生成速度上的突破，以及相较于传统自回归模型在延迟和吞吐量方面的性能优势。具体技术细节或对比数据需参考原文。", "category": "paper"}, {"id": "cmphirw6f0oqmsljw84zngzfo", "title": "AlphaProof Nexus：用形式化验证驱动AI数学证明搜索", "title_en": "Google DeepMind's new paper. Shows that AI can now search formal mathematics proofs， but only insid…", "url": "https://x.com/rohanpaul_ai/status/2057954067146781151", "source": "X：Rohan Paul (@rohanpaul_ai)", "publishedAt": "2026-05-22T22:37:39.000Z", "summary": "Google DeepMind提出了AlphaProof Nexus系统，它将大型语言模型与Lean形式化验证工具相结合。该系统允许LLM在生成证明的过程中，不断读取Lean的编译错误并进行修正，还可调用更强的工具辅助解决子问题。这一机制迫使模型将每一步逻辑都转化为可编译、可验证的代码，从而将其角色从\"令人信服的叙述者\"转变为\"候选方案生成器\"。在针对353个Erdős问题和492个开放猜想的测试中，系统成功解决了9个Erdős问题并证明了44个序列猜想。该研究展示了形式化验证在暴露AI逻辑错误、建立\"人类提问-模型探索-验证器把关\"新分工中的关键作用。", "category": "paper"}, {"id": "cmphj83pb0oufsljw1o50bxte", "title": "黄仁勋：AI 基建年度开支要冲到 4 万亿美元！", "title_en": null, "url": "https://www.ithome.com/0/954/223.htm", "source": "IT之家（RSS）", "publishedAt": "2026-05-22T22:30:03.000Z", "summary": "英伟达发布2027财年Q1财报，营收816亿美元，同比增长85%，净利润583亿美元，翻两倍多，市值达5.7万亿美元，已超德国2026年GDP预测。黄仁勋预测，超大规模云厂商的AI基建年度开支将从当前的1万亿美元，增长至3-4万亿美元，远超华尔街预期。财报同时显示，数据中心业务营收752亿美元，占比超九成。值得注意的是，AI基建的高能耗正推高居民电费，数据中心用电成本转嫁效应已初步显现。", "category": "industry"}, {"id": "cmphi58uq0olfsljw5hm9fmom", "title": "动作捕捉与角色动画制作更轻松", "title_en": "motion capture and character animation have never been easier. keep building &amp； more features c…", "url": "https://x.com/ViggleAI/status/2057947352195858568", "source": "X：Viggle AI (@ViggleAI)", "publishedAt": "2026-05-22T22:10:58.000Z", "summary": "动作捕捉和角色动画制作从未如此简单。\n\n持续构建，更多功能即将推出！", "category": "ai-products"}, {"id": "cmphhu4x20ohusljw43utrbfd", "title": "v2.1.149 更新摘要", "title_en": "v2.1.149", "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.149", "source": "Claude Code：GitHub Releases（RSS）", "publishedAt": "2026-05-22T22:09:29.000Z", "summary": "本次 v2.1.149 更新包含功能增强、企业设置和多项修复。新增 `/usage` 命令的使用量分类显示功能，可区分技能、子代理、插件及每个 MCP 服务器的消耗；`/diff` 详情视图支持键盘滚动；Markdown 输出兼容 GFM 任务列表。企业版新增 `allowAllClaudeAiMcps` 设置以加载云 MCP 连接器。修复了 PowerShell 权限绕过、Git 工作树沙盒写入白名单越界、脚本路径含空格时 `otelHeadersHelper` 静默失败等安全问题。改进了 `/feedback` 报告，包含上下文压缩前的对话内容，便于排查长会话中的早期问题。", "category": "ai-products"}, {"id": "cmphi2mo10ojusljwzc35z3mk", "title": "Claude自动模式新增Pro计划与模型支持", "title_en": "Two updates to auto mode： · Now available on the Pro plan · Sonnet 4.6 is now supported， alongside …", "url": "https://x.com/ClaudeDevs/status/2057946803685974482", "source": "X：Claude Devs (@ClaudeDevs)", "publishedAt": "2026-05-22T22:08:47.000Z", "summary": "自动模式的两项更新：\n\n· 现已在Pro计划中提供\n· 现已支持Sonnet 4.6，以及Opus 4.7\n\n按下Shift+tab，让Claude运行。", "category": "ai-products"}, {"id": "cmphdt39c0njesljw5m72ds3y", "title": "新增差异标记样式设置选项", "title_en": "Shipped papercut： new diff markers setting in Appearance. Prefer classic + / - markers when reviewi…", "url": "https://x.com/OpenAIDevs/status/2057918624841728349", "source": "X：OpenAI Developers (@OpenAIDevs)", "publishedAt": "2026-05-22T20:16:49.000Z", "summary": "已发布剪纸功能：外观设置中新增差异标记样式。\n\n在查看差异时更喜欢经典的 + / - 标记？现在你可以选择使用它们，而不仅仅是彩色差异条。\n\n默认设置保持不变，除非你主动选择启用。", "category": "ai-products"}, {"id": "cmphbp5r30n1asljwb1oaa1ly", "title": "ChatGPT语音模式实现表单语音填写", "title_en": "Paperwork is better when you can just talk through it. With Images in ChatGPT and voice mode， you c…", "url": "https://x.com/ChatGPTapp/status/2057908052968521902", "source": "X：ChatGPT (@ChatGPTapp)", "publishedAt": "2026-05-22T19:34:48.000Z", "summary": "用对话处理文书工作更轻松。\n\n借助ChatGPT的图像功能和语音模式，您可以上传表单，说出要填写的内容，即可获得填写完成的版本。", "category": "ai-products"}, {"id": "cmph8trkr0mc4sljwb6bn498k", "title": "回顾Google I/O 2026对话环节", "title_en": "Catch up on the Dialogues stage at Google I/O 2026.", "url": "https://blog.google/innovation-and-ai/technology/ai/io-2026-dialogues-recap", "source": "Google Blog：AI（RSS）", "publishedAt": "2026-05-22T18:00:00.000Z", "summary": "在2026年Google I/O开发者大会上，对话环节聚焦于未来科技趋势。行业领导者围绕人工智能、量子计算、机器人学以及创造力等核心议题展开了深入探讨，旨在勾勒这些前沿领域的技术演进路径与发展蓝图。", "category": "industry"}, {"id": "cmph7lr9h0m0xsljwkodm366y", "title": "Kakuna：自动化加固代码库的AI代理工具", "title_en": "Kakuna： skills with checklists that only know how to harden your codebase /plan with it then let it…", "url": "https://x.com/swyx/status/2057876022553690327", "source": "X：swyx (@swyx)", "publishedAt": "2026-05-22T17:27:31.000Z", "summary": "Kakuna是一款AI代理工具，旨在将早期快速原型自动转化为可维护的生产级代码库。它通过内置的检查清单和\"计划-目标\"工作流，模拟人类开发与运维流程，在保持功能不变的前提下，自动执行代码审查、测试补充、重构等\"无聊\"工作，并强调子代理并行以提升效率。该工具是为\"人类与代理协作\"而设计的范例，其核心是\"反熵增\"与\"反代码腐化\"。例如，一次约16小时的运行能生成上百次提交，将一个脆弱的MVP转变为一个结构清晰、可长期构建的稳定项目。", "category": "tip"}, {"id": "cmph7eb1t0m08sljwk4zixd2k", "title": "Warp现已支持OpenRouter接入", "title_en": "OpenRouter is now supported in @warpdotdev！ ❤️", "url": "https://x.com/OpenRouter/status/2057875517391667492", "source": "X：OpenRouter (@OpenRouter)", "publishedAt": "2026-05-22T17:25:31.000Z", "summary": "OpenRouter现已在@warpdotdev中得到支持！❤️\n\n工程师Dagm Assefa展示了如何连接DeepSeek和OpenRouter。\n\n文档：https：//docs.warp.dev/agent-platform/inference/custom-inference-endpoint/ 🔖", "category": "ai-products"}, {"id": "cmph6k3uv0lqqsljwlwu0lr4z", "title": "谷歌I/O大会发布AI代理全套开发工具链", "title_en": "http：//x.com/i/article/2057866361636888576", "url": "https://x.com/GoogleAI/status/2057871583843135978", "source": "X：Google AI (@GoogleAI)", "publishedAt": "2026-05-22T17:09:53.000Z", "summary": "谷歌在I/O开发者大会宣布，系统性构建面向AI代理（Agent）的开发与部署工具链。核心更新包括：独立桌面应用Antigravity 2.0及其命令行工具、SDK面世；Google AI Studio新增Kotlin支持，可一键开发安卓应用并发布，同时推出移动端App。此外，Gemini API推出托管代理服务，实现一键部署；WebMCP作为开放标准在Chrome 149中推出，允许网页向代理暴露工具；Chrome DevTools也开放给AI代理以自动化调试。企业级客户可直接连接Google Cloud项目，而DeepMind的科学技能包则加速特定领域研究。此举标志着谷歌正全面打造从开发、接口到部署的完整AI代理生态系统。", "category": "ai-products"}, {"id": "cmph6kxye0lrbsljwqusx8mro", "title": "Perplexity开源供应链安全扫描工具Bumblebee", "title_en": "Today we're open-sourcing Bumblebee， a read-only scanner for macOS and Linux. It checks developer m…", "url": "https://x.com/perplexity_ai/status/2057869990536360334", "source": "X：Perplexity (@perplexity_ai)", "publishedAt": "2026-05-22T17:03:33.000Z", "summary": "今天我们开源了Bumblebee，一个适用于macOS和Linux的只读扫描器。\n它检查开发者机器上的高风险软件包、扩展和AI工具配置。\n连接到Computer后，每当出现新的供应链风险时，它可以触发更深入的扫描。\nhttps：//github.com/perplexityai/bumblebee", "category": "tip"}, {"id": "cmph67qxj0ln6sljwnbeo7vwe", "title": "智能体工作负载悄然重塑推理经济", "title_en": "Agentic workloads are quietly rewriting inference economics. We pulled data from 432k real coding ag…", "url": "https://x.com/SemiAnalysis_/status/2057869518295249373", "source": "X：SemiAnalysis (@SemiAnalysis_)", "publishedAt": "2026-05-22T17:01:41.000Z", "summary": "智能体工作负载正在悄然重塑推理经济学。我们从SemiAnalysis的43.2万个真实编码智能体请求中提取数据，发现中位数并非3.2万或6.4万，而是9.6万输入token。作为参考，这意味着在你输入问题之前，模型已处理了超过《了不起的盖茨比》全文长度的文本。（1/3）🧵", "category": "tip"}, {"id": "cmph4kqfx0l9xsljw0q29ydog", "title": "Suno AI创作夏日神曲《波多黎各》爆火", "title_en": "The song of the summer was made on Suno.☀️Huge thanks to @GMA for highlighting the viral \"Puerto Ric…", "url": "https://x.com/suno/status/2057858423664894196", "source": "X：Suno (@suno)", "publishedAt": "2026-05-22T16:17:36.000Z", "summary": "今年夏天的热门歌曲是用 Suno 制作的。☀️非常感谢 @GMA 让这首病毒式传播的《Puerto Rico》歌曲被更多人看到！还有谁的脑海里也一直回响着这首歌？🇵🇷🎶", "category": "industry"}, {"id": "cmph4z1rb0ld0sljwldi3jhdn", "title": "GitHub 连续第三年被 Gartner® 魔力象限TM 评为企业级 AI 编程代理领域的领导者", "title_en": "GitHub recognized as a Leader in the Gartner® Magic QuadrantTM for Enterprise AI Coding Agents for the third year in a row", "url": "https://github.blog/ai-and-ml/github-copilot/github-recognized-as-a-leader-in-the-gartner-magic-quadrant-for-enterprise-ai-coding-agents-for-the-third-year-in-a-row", "source": "GitHub Blog", "publishedAt": "2026-05-22T16:10:21.000Z", "summary": "Gartner 最新发布的魔力象限报告中，GitHub 连续第三年被列为\"领导者\"象限，该评估专注于企业级 AI 编程代理领域。GitHub 表示，其致力于构建一个开放、安全且由 AI 驱动的平台，以赋能每一位开发者并定义软件开发的未来。此次评选进一步巩固了 GitHub 在 AI 辅助开发工具市场的领先地位。", "category": "industry"}, {"id": "cmph4m21w0laosljw49bblm8j", "title": "DeepSeek-V4-Pro永久降价公告", "title_en": "We are making our discount permanent！ 🎉 Enjoy building with DeepSeek-V4-Pro and bring your innovat…", "url": "https://x.com/deepseek_ai/status/2057854261699195173", "source": "X：DeepSeek (@deepseek_ai)", "publishedAt": "2026-05-22T16:01:03.000Z", "summary": "我们将优惠永久化！🎉\n\n享受使用 DeepSeek-V4-Pro 构建的乐趣，将您的创新想法变为现实！🚀", "category": "ai-products"}, {"id": "cmph294ju0ko5sljwmb0hxida", "title": "Project Genie与谷歌街景合作推出交互式世界", "title_en": "Project Genie 🤝 @GoogleMaps Street View You can now take real U.S. places and transform them into …", "url": "https://x.com/GoogleDeepMind/status/2057842131142590512", "source": "X：Google DeepMind (@GoogleDeepMind)", "publishedAt": "2026-05-22T15:12:51.000Z", "summary": "Project Genie 🤝 @GoogleMaps Street View\n\n你现在可以将真实的美国地点转化为全新的交互式世界。🌍", "category": "ai-products"}, {"id": "cmph2bs280kovsljwtmqaq02v", "title": "文本退化：多数基准测试未追踪的生产故障模式", "title_en": "Text Degeneration： A Production Failure Mode That Most Benchmarks Do Not Track", "url": "https://huggingface.co/blog/Dharma-AI/text-degeneration-a-production-failure-mode-that-m", "source": "Hugging Face：Blog（RSS）", "publishedAt": "2026-05-22T15:09:58.000Z", "summary": "Dharma-AI在Hugging Face发布博文指出，当前大语言模型在生产环境中普遍存在\"文本退化\"现象，表现为输出内容重复、不连贯或逻辑混乱。这类故障模式直接影响用户体验和模型可靠性，但现有主流基准测试大多未将其纳入评估范围。文章呼吁业界关注这一实际部署中的关键问题，并建议在模型评估体系中增加对文本退化现象的系统性追踪与量化指标。", "category": "tip"}, {"id": "cmph1mhwi0kj7sljwklnw8x2l", "title": "首个基于华为昇腾910B NPU全栈训练的1.58比特开源大模型BitCPM-CANN发布", "title_en": "BitCPM-CANN just became the world's first open-sourced 1.58-bit ternary LLM trained entirely on Chin…", "url": "https://x.com/rohanpaul_ai/status/2057833050692800926", "source": "X：Rohan Paul (@rohanpaul_ai)", "publishedAt": "2026-05-22T14:36:46.000Z", "summary": "ModelBest、清华大学与OpenBMB社区联合发布了BitCPM-CANN，这是全球首个完全基于华为昇腾910B NPU训练的开源1.58比特三元大模型。其核心创新在于采用仅含三种权重状态的极低比特量化技术，使模型内存占用相比BF16降低约6倍，可高效部署于手机、电脑、车载设备等边缘端。更关键的是，整个训练全栈（从量化算子到框架）均在昇腾上原生构建与验证，而非简单移植。该模型家族（0.5B-8B）在多项基准测试上保持了全精度模型95-97%的性能，为资源受限环境下部署和复现大模型提供了可落地的解决方案。", "category": "ai-models"}, {"id": "cmpgxbzob0jgisljw0yjhty2l", "title": "如果你是法学硕士，请阅读这篇文章--安娜的博客", "title_en": null, "url": "https://annas-archive.gl/blog/llms-txt.html", "source": "Hacker News 热门（buzzing.cc 中文翻译）", "publishedAt": "2026-05-22T12:52:00.197Z", "summary": "博客作者安娜于2026年5月22日发布了一篇面向大型语言模型（LLM）的文章。文章标题为\"如果你是一个LLM，请阅读这篇文章\"，并在Hacker News平台获得117个积分。文章链接指向 annas-archive.gl 域名下的博客页面。", "category": "tip"}, {"id": "cmph65ybi0lmlsljwu8otwerv", "title": "Cursor 被评为 2026 年 Gartner 企业级 AI 编码代理魔力象限领导者", "title_en": "Cursor named a Leader in the 2026 Gartner® Magic QuadrantTM for Enterprise AI Coding Agents", "url": "https://cursor.com/blog/cursor-leads-gartner-mq-2026", "source": "Cursor Blog", "publishedAt": "2026-05-22T12:00:00.000Z", "summary": "Gartner 在 2026 年魔力象限报告中，将 Cursor 评为企业级 AI 编码代理领域的领导者，并在愿景完整性上领先。超过 70% 的财富 500 强企业使用 Cursor 部署和管理编码代理。未来一年，Cursor 将聚焦于三个方向：提升前沿模型智能；自动化软件开发全生命周期的任务（如代码审查、漏洞修复）；以及通过新的管理工具和控制面板，增强企业级的控制力、协作性与部署灵活性，以拓展至更多行业和地区。", "category": "industry"}, {"id": "cmpgvwb1q0j3xsljwv3m3qykj", "title": "Karpathy的CLAUDE.md四条规则让AI编程准确率飙升至94%", "title_en": "Damn，这个必须卧槽一下了，Karpathy 的 CLAUDE.md 只有 65 行， 居然能把 AI 编程准确率从 65% 拉到 94%， 以22 万星标登顶 GitHub 趋势榜，而且绝大多数…", "url": "https://x.com/AYi_AInotes/status/2057791192738283669", "source": "X：阿易 AI Notes (@AYi_AInotes)", "publishedAt": "2026-05-22T11:50:26.000Z", "summary": "Karpathy发布的CLAUDE.md文件以其简洁高效的AI编程指导原则引爆GitHub，获得超22万星标并登顶趋势榜。该文件仅含65行、4条核心规则，却能将AI编程的准确率从65%显著提升至94%。其核心在于强制开发者\"慢下来\"，将深度思考、追求简洁、精准修改和目标驱动等原则变为硬性编码准则，旨在对抗开发者习惯性\"先写再说\"的本能。目前大多数开发者尚未深入研读这一备受关注的效率指南。", "category": "tip"}, {"id": "cmpgtwqma0infsljwhk4gdbmx", "title": "PixVerse App上线图像生成功能", "title_en": "Create Image is live in PixVerse App Prompt or reference in， generate on your phone. 3 free generati…", "url": "https://x.com/PixVerse_/status/2057777743027392848", "source": "X：PixVerse (@PixVerse_)", "publishedAt": "2026-05-22T10:57:00.000Z", "summary": "Create Image已在PixVerse App上线。\n输入提示词或参考图，在手机上即可生成。\n5月24日至31日11：00 UTC，每人可免费生成3次。\n转发+关注+回复 = 300 Creds（仅限72小时）", "category": "ai-products"}, {"id": "cmpgrcly80hyesljwttfmd9iu", "title": "国家发改委：加快具身智能训练基础设施建设，让机器人不仅能上赛场，还能\"进工厂、进商场、进家庭\"", "title_en": null, "url": "https://www.ithome.com/0/954/126.htm", "source": "IT之家（RSS）", "publishedAt": "2026-05-22T09:46:08.000Z", "summary": "国家发改委在5月22日新闻发布会上表示，人形机器人在半程马拉松比赛中表现显著提升，速度更快、更灵活、更自主，参赛队伍从20余支增至百余支，完赛队伍从6支增至40余支，反映具身智能创新活力增强和产业规模扩大。下一步，发改委将加快具身智能训练基础设施建设，推动机器人融入工厂、商场、家庭等场景，并建设应用中试基地以加速技术落地。", "category": "industry"}, {"id": "cmpgrcly80hyfsljwa00hvczv", "title": "网易有道\"子曰4\"多模态模型、语音合成模型全量开源", "title_en": "网易有道\"子曰 4\"多模态模型、语音合成模型全量开源", "url": "https://www.ithome.com/0/954/124.htm", "source": "IT之家（RSS）", "publishedAt": "2026-05-22T09:45:01.000Z", "summary": "网易有道宣布将其\"子曰\"大模型4.0的多模态模型与语音合成模型面向全球全量开源。其中，多模态模型（27B参数）专注于教育场景，在处理高难度视觉数理问题上达到行业顶尖水平，纯文本中文数理难题准确率为81.4%。该模型通过思维链优化，将输出长度压缩43.2%，有效降低了推理成本。同时开源的语音合成模型支持跨语种音色与情感迁移克隆，3秒内即可完成零样本复制，准确度超97%，并支持包括中、英、日、韩在内的14种语言。", "category": "ai-models"}, {"id": "cmpgp7fka0hfgsljw59faowv9", "title": "18 年老粉与微软 GitHub 决裂：我希望它更好，但我更想编程", "title_en": null, "url": "https://www.ithome.com/0/953/977.htm", "source": "IT之家（RSS）", "publishedAt": "2026-05-22T08:10:33.000Z", "summary": "全球最大的代码托管平台GitHub正面临严重危机。资深开发者Mitchell Hashimoto公开与平台决裂，因频繁崩溃影响编程。近几个月，花旗银行、英特尔等巨头因持续故障表达不满，OpenAI探索自建方案。更严重的是，3800多个内部仓库遭黑客入侵，源代码被公开叫卖。同时，微软取消GitHub CEO职位，将其并入CoreAI团队，导致大量技术骨干流失。这个承载1.5亿开发者的平台，正以惨烈方式站在生死存亡的十字路口。", "category": "industry"}, {"id": "cmpgmd3c80gpwsljw0b9p1vix", "title": "X平台发布体验差，ChatGPT插件助发布", "title_en": "今天抽空试试，x的产品经理真的不太行。", "url": "https://x.com/vista8/status/2057726749723840918", "source": "X：Vista (@vista8)", "publishedAt": "2026-05-22T07:34:22.000Z", "summary": "推文批评X平台产品经理能力不足，发布文章体验糟糕。引用推文显示，开发者利用ChatGPT（通过codex/goal）开发了Markdown转换插件，允许用户拖拽文件快速生成X文章格式，以改善发布流程。该插件开源并提供谷歌插件版本，旨在解决原生体验的痛点。", "category": "tip"}, {"id": "cmpgiqiwh0frlsljw8w0tjz0h", "title": "DeepSeek V4 Flash登顶周榜", "title_en": "DeepSeek V4 Flash has topped the weekly leaderboard", "url": "https://x.com/OpenRouter/status/2057703179882749985", "source": "X：OpenRouter (@OpenRouter)", "publishedAt": "2026-05-22T06:00:43.000Z", "summary": "DeepSeek V4 Flash已登顶周排行榜", "category": "industry"}, {"id": "cmpggmof80f99sljw4fsa94ek", "title": "DeepSeek 推进 700 亿元融资，梁文锋承诺坚持开发开源 AI 模型而非追求短期商业化目标", "title_en": null, "url": "https://www.ithome.com/0/953/832.htm", "source": "IT之家（RSS）", "publishedAt": "2026-05-22T04:30:38.000Z", "summary": "DeepSeek正推进700亿元人民币的巨额融资，估值约450亿美元。创始人梁文锋承诺将继续开源开发AI模型，不追求短期商业化，目标是技术升级与通用人工智能。腾讯、IDG资本等接近参投，梁文锋个人可能注资200亿元。若成功将创下中国科技初创公司首轮融资纪录。", "category": "industry"}, {"id": "cmpgf40dn0ew7sljw5dd58ynk", "title": "Antigravity付费版Gemini配额再翻三倍", "title_en": "Update： *Weekly* Gemini quotas on all paid @Antigravity tiers have just been tripled， and quotas are…", "url": "https://x.com/googleaidevs/status/2057679246085226965", "source": "X：Google AI for Developers (@googleaidevs)", "publishedAt": "2026-05-22T04:25:36.000Z", "summary": "更新：所有付费@Antigravity层级的*每周*Gemini配额已再次提升至三倍，且配额已正式重置。", "category": "ai-products"}, {"id": "cmpgenaxf0es5sljw2xn4auuh", "title": "OpenAI Codex /goal功能正式发布及使用指南", "title_en": "如何在 Codex App 使用 /goal 的简单说明： 1. 升级 Codex App 到最新版本 2. 先在命令行运行一下下面的指令： > codex features enable go…", "url": "https://x.com/dotey/status/2057672416071987378", "source": "X：宝玉 (@dotey)", "publishedAt": "2026-05-22T03:58:28.000Z", "summary": "OpenAI宣布Codex的/goal模式已结束实验，成为稳定功能。用户可在Codex应用、IDE扩展或CLI中使用，通过设定具体里程碑，让AI持续工作直至完成，任务可运行数小时甚至数天。过程中支持随时检查、调整方向及暂停。使用前需升级应用并启用该功能（可通过命令行指令或手动修改配置文件实现）。开启后，可在输入框管理任务，并利用侧边对话查看进度而不中断主任务。该功能旨在高效处理各类复杂任务。", "category": "tip"}, {"id": "cmpga762r0dm4sljw23zihurw", "title": "智谱GLM-5.1高速版发布：刷新全球大模型API速度纪录", "title_en": "智谱 GLM-5.1 高速版 AI 模型发布，跑出全球最快速度 400 tokens/s", "url": "https://www.ithome.com/0/953/717.htm", "source": "IT之家（RSS）", "publishedAt": "2026-05-22T02:02:46.000Z", "summary": "5月22日，智谱向部分企业客户推出了旗舰大模型GLM-5.1的高速版API\"GLM-5.1-highspeed\"。该版本输出速度达400 tokens/s，刷新了全球大模型API速度上限。关键突破在于，它首次在国产大模型中实现了旗舰级能力与低延迟的结合，打破了\"高速模型即轻量模型\"的传统。该版本由智谱GLM团队与TileRT团队合作，通过系统级优化确保了速度的生产级稳定性，适用于AI编程、实时语音交互等场景。", "category": "ai-models"}, {"id": "cmpga762r0dmcsljw5170mv58", "title": "美国 AI 监管令突然告吹内幕：白宫内讧，马斯克、扎克伯格游说特朗普", "title_en": null, "url": "https://www.ithome.com/0/953/708.htm", "source": "IT之家（RSS）", "publishedAt": "2026-05-22T01:37:31.000Z", "summary": "5月22日，美国总统特朗普突然取消了原定签署的AI行政令，该行政令旨在加强监管，赋予政府在AI模型公开发布前进行评估的权力。取消源于特朗普本人对监管的反感，以及高级顾问大卫·萨克斯和科技界领袖如扎克伯格、马斯克的反对与游说，凸显白宫内讧。特朗普认为监管会成为绊脚石，阻碍美国AI领先优势。草案中还存在如财政部在安全协调中角色过重等争议，白宫表示正制定其他AI安全举措。", "category": "industry"}, {"id": "cmpga762r0dmfsljwzsp341eh", "title": "图灵测试 76 年后首现 AI 通过实证：GPT-4.5 以 73% 判定率超越真人", "title_en": "图灵测试 76 年后首现 AI 通过实证：GPT-4.5 以 73% 判定率超越真人，聊天 15 分钟难辨人机", "url": "https://www.ithome.com/0/953/705.htm", "source": "IT之家（RSS）", "publishedAt": "2026-05-22T01:22:11.000Z", "summary": "加州大学圣地亚哥分校研究首次实证现代AI可通过图灵测试。研究表明，在获得特定提示后，GPT-4.5在5至15分钟的对话中被误认为人类的概率高达73%，显著超过真人。LLaMa-3.1-405B的判定率（56%）与真人相当，而GPT-4o和ELIZA仅约20%。研究指出提示词至关重要，它使AI能模仿人类语气、幽默感甚至易错性等社会行为特征。这一发现迫使人们重新思考图灵测试的意义，并凸显了大语言模型在网络信任与安全方面构成的潜在挑战。", "category": "paper"}, {"id": "cmpg7ztcn0d1vsljwywtcyylh", "title": "用户好评即最佳文案，视觉呈现由AI完成", "title_en": "Your customers wrote the best copy you'll ever have. Now give it the visual to match. Drop in the q…", "url": "https://x.com/LumaLabsAI/status/2057628006353670163", "source": "X：Luma AI (@LumaLabsAI)", "publishedAt": "2026-05-22T01:02:00.000Z", "summary": "你的客户写出了你永远无法超越的文案。现在，为它匹配视觉呈现吧。\n只需粘贴评价，设定风格，Luma Agents 将处理所有推荐语图形。\n让它被听见 → http：//lumalabs.ai/app", "category": "ai-products"}, {"id": "cmpg6xm8b0ctysljw2zo14zo8", "title": "Gemini Omni发布，创意作品涌现", "title_en": "Gemini Omni is here， and we've been seeing amazing creations all week. Here are some standouts 👇", "url": "https://x.com/GeminiApp/status/2057616371748651054", "source": "X：Gemini (@GeminiApp)", "publishedAt": "2026-05-22T00:15:46.000Z", "summary": "Gemini Omni来了，我们本周看到了许多令人惊叹的创作。以下是一些杰出作品 👇", "category": "ai-products"}, {"id": "cmph748qc0lwnsljwiu60grlt", "title": "VSAS-Bench：视觉流式辅助模型的实时评估基准", "title_en": "VSAS-Bench： Real-Time Evaluation of Visual Streaming Assistant Models", "url": "https://machinelearning.apple.com/research/vsas-bench-streaming-assistant", "source": "Apple Machine Learning Research（RSS）", "publishedAt": "2026-05-22T00:00:00.000Z", "summary": "现有视觉语言模型框架主要在离线场景下评估性能，但实时视觉助手所依赖的流式模型还需考量额外指标，如反映响应时效性的\"主动性\"和捕捉随时间推移响应稳定性的\"一致性\"。为此，研究团队提出了VSAS-Bench，这是一个新的评估基准，专门针对流式视觉语言模型在实时交互任务中的表现，填补了当前评估方法在动态、持续生成场景下的空白。", "category": "paper"}, {"id": "cmph4wipd0lcrsljwpa3d9km5", "title": "可塑界面：AI驱动的未来软件形态", "title_en": "Plastic User Interfaces", "url": "https://www.tomtunguz.com/plastic-user-interfaces", "source": "Tomer Tunguz 博客（VC 分析）", "publishedAt": "2026-05-22T00:00:00.000Z", "summary": "Salesforce已采用无头架构，允许销售人员通过AI直接更新数据，许多公司正通过MCPs跟进。同时，AI专家们正推动超越纯文本、更丰富的界面（如HTML），支持图表与交互。AI能根据场景动态生成定制化界面。无头系统并非移除前端，而是支持多种可塑化界面（如音频、网页）。未来软件的核心价值在于动态管理这些界面、确保其准确性，并将各类AI产物整合为可演化的上下文数据库与制品库。用户界面并未消失，而是变得\"可塑\"，能按需变形。", "category": "tip"}], "sections": [{"label": "模型发布/更新", "slug": "ai-models", "count": 3, "items": [{"idx": 1, "title": "首个基于华为昇腾910B NPU全栈训练的1.58比特开源大模型BitCPM-CANN发布", "summary": "ModelBest、清华大学与OpenBMB社区联合发布了BitCPM-CANN，这是全球首个完全基于华为昇腾910B NPU训练的开源1.58比特三元大模型。其核心创新在于采用仅含三种权重状态的极低比特量化技术，使模型内存占用相比BF16降低约6倍，可高效部署于手机、电脑、车载设备等边缘端。更关键的是，整个训练全栈（从量化算子到框架）均在昇腾上原生构建与验证，而非简单移植。该模型家族（0.5B-8B）在多项基准测试上保持了全精度模型95-97%的性能，为资源受限环境下部署和复现大模型提供了可落地的解决方案。", "publishedAt": "2026-05-22T14:36:46.000Z", "category": "ai-models", "sourceName": "X：Rohan Paul (@rohanpaul_ai)", "sourceUrl": "https://x.com/rohanpaul_ai/status/2057833050692800926"}, {"idx": 2, "title": "网易有道\"子曰4\"多模态模型、语音合成模型全量开源", "summary": "网易有道宣布将其\"子曰\"大模型4.0的多模态模型与语音合成模型面向全球全量开源。其中，多模态模型（27B参数）专注于教育场景，在处理高难度视觉数理问题上达到行业顶尖水平，纯文本中文数理难题准确率为81.4%。该模型通过思维链优化，将输出长度压缩43.2%，有效降低了推理成本。同时开源的语音合成模型支持跨语种音色与情感迁移克隆，3秒内即可完成零样本复制，准确度超97%，并支持包括中、英、日、韩在内的14种语言。", "publishedAt": "2026-05-22T09:45:01.000Z", "category": "ai-models", "sourceName": "IT之家（RSS）", "sourceUrl": "https://www.ithome.com/0/954/124.htm"}, {"idx": 3, "title": "智谱GLM-5.1高速版发布：刷新全球大模型API速度纪录", "summary": "5月22日，智谱向部分企业客户推出了旗舰大模型GLM-5.1的高速版API\"GLM-5.1-highspeed\"。该版本输出速度达400 tokens/s，刷新了全球大模型API速度上限。关键突破在于，它首次在国产大模型中实现了旗舰级能力与低延迟的结合，打破了\"高速模型即轻量模型\"的传统。该版本由智谱GLM团队与TileRT团队合作，通过系统级优化确保了速度的生产级稳定性，适用于AI编程、实时语音交互等场景。", "publishedAt": "2026-05-22T02:02:46.000Z", "category": "ai-models", "sourceName": "IT之家（RSS）", "sourceUrl": "https://www.ithome.com/0/953/717.htm"}]}, {"label": "产品发布/更新", "slug": "ai-products", "count": 17, "items": [{"idx": 4, "title": "OpenClaw 2026.5.22发布：性能优化与安全加固", "summary": "OpenClaw 2026.5.22 已上线\n\n⚡ Gateway/模型启动路径更精简\n🧠 /models 响应时间降至约5毫秒\n🔒 npm包现提供锁定依赖项\n🪟 Windows安装/更新路径更安全\n\n等待更少，意外更少。\nhttps：//github.com/openclaw/openclaw/releases/tag/v2026.5.22", "publishedAt": "2026-05-24T04:00:09.000Z", "category": "ai-products", "sourceName": "X：OpenClaw (@openclaw)", "sourceUrl": "https://x.com/openclaw/status/2058397616124072274"}, {"idx": 5, "title": "StepAudio 2.5实时语音发布：副语言感知与人格化交互", "summary": "StepAudio 2.5 Realtime是一款实时语音模型，能够深度理解用户语音中的语气、语速、停顿乃至微表情等副语言特征。它支持通过API接入自定义人格，允许设定个性、背景故事和语言风格，并提供了上万种原生人格选项，可组合出数百万种特征。产品还内置了5个可直接体验的预设人格，并经过RLHF调优，确保在复杂的角色扮演压力测试中也能保持角色一致性。该模型支持中文和英文。", "publishedAt": "2026-05-23T21:45:21.000Z", "category": "ai-products", "sourceName": "X：阶跃星辰 StepFun (@StepFun_ai)", "sourceUrl": "https://x.com/StepFun_ai/status/2058303294544425197"}, {"idx": 6, "title": "Replit Agent与Squidler集成，实现全自动化AI质量保障", "summary": "Replit Agent与Squidler已完成集成，形成一套完整的AI驱动质量保障闭环。用户可通过自然语言描述应用功能，由Replit Agent负责构建。构建完成后，Squidler会像真实用户一样对线上应用进行自动化测试，无需编写任何测试脚本。测试中发现的问题会自动反馈给Replit Agent进行修复。该流程已通过Squidler加入Replit的MCP库正式上线，实现了从构建、测试到修复的全自动化，显著降低了应用测试与维护的门槛。", "publishedAt": "2026-05-23T19:00:06.000Z", "category": "ai-products", "sourceName": "X：Replit (@Replit)", "sourceUrl": "https://x.com/Replit/status/2058261705998602548"}, {"idx": 7, "title": "Models.dev：一个关于人工智能模型规格、定价和功能的开源数据库", "summary": "近期发布了开源数据库Models.dev，专门收录人工智能模型的各项规格、定价及功能信息。该项目在GitHub公开，便于开发者查询和比较不同AI模型。其在Hacker News社区获得101点关注度，显示出技术社区对这类集中化、透明化的模型信息资源的较大兴趣。", "publishedAt": "2026-05-23T01:39:14.985Z", "category": "ai-products", "sourceName": "Hacker News 热门（buzzing.cc 中文翻译）", "sourceUrl": "https://github.com/anomalyco/models.dev"}, {"idx": 8, "title": "动作捕捉与角色动画制作更轻松", "summary": "动作捕捉和角色动画制作从未如此简单。\n\n持续构建，更多功能即将推出！", "publishedAt": "2026-05-22T22:10:58.000Z", "category": "ai-products", "sourceName": "X：Viggle AI (@ViggleAI)", "sourceUrl": "https://x.com/ViggleAI/status/2057947352195858568"}, {"idx": 9, "title": "v2.1.149 更新摘要", "summary": "本次 v2.1.149 更新包含功能增强、企业设置和多项修复。新增 `/usage` 命令的使用量分类显示功能，可区分技能、子代理、插件及每个 MCP 服务器的消耗；`/diff` 详情视图支持键盘滚动；Markdown 输出兼容 GFM 任务列表。企业版新增 `allowAllClaudeAiMcps` 设置以加载云 MCP 连接器。修复了 PowerShell 权限绕过、Git 工作树沙盒写入白名单越界、脚本路径含空格时 `otelHeadersHelper` 静默失败等安全问题。改进了 `/feedback` 报告，包含上下文压缩前的对话内容，便于排查长会话中的早期问题。", "publishedAt": "2026-05-22T22:09:29.000Z", "category": "ai-products", "sourceName": "Claude Code：GitHub Releases（RSS）", "sourceUrl": "https://github.com/anthropics/claude-code/releases/tag/v2.1.149"}, {"idx": 10, "title": "Claude自动模式新增Pro计划与模型支持", "summary": "自动模式的两项更新：\n\n· 现已在Pro计划中提供\n· 现已支持Sonnet 4.6，以及Opus 4.7\n\n按下Shift+tab，让Claude运行。", "publishedAt": "2026-05-22T22:08:47.000Z", "category": "ai-products", "sourceName": "X：Claude Devs (@ClaudeDevs)", "sourceUrl": "https://x.com/ClaudeDevs/status/2057946803685974482"}, {"idx": 11, "title": "新增差异标记样式设置选项", "summary": "已发布剪纸功能：外观设置中新增差异标记样式。\n\n在查看差异时更喜欢经典的 + / - 标记？现在你可以选择使用它们，而不仅仅是彩色差异条。\n\n默认设置保持不变，除非你主动选择启用。", "publishedAt": "2026-05-22T20:16:49.000Z", "category": "ai-products", "sourceName": "X：OpenAI Developers (@OpenAIDevs)", "sourceUrl": "https://x.com/OpenAIDevs/status/2057918624841728349"}, {"idx": 12, "title": "ChatGPT语音模式实现表单语音填写", "summary": "用对话处理文书工作更轻松。\n\n借助ChatGPT的图像功能和语音模式，您可以上传表单，说出要填写的内容，即可获得填写完成的版本。", "publishedAt": "2026-05-22T19:34:48.000Z", "category": "ai-products", "sourceName": "X：ChatGPT (@ChatGPTapp)", "sourceUrl": "https://x.com/ChatGPTapp/status/2057908052968521902"}, {"idx": 13, "title": "Warp现已支持OpenRouter接入", "summary": "OpenRouter现已在@warpdotdev中得到支持！❤️\n\n工程师Dagm Assefa展示了如何连接DeepSeek和OpenRouter。\n\n文档：https：//docs.warp.dev/agent-platform/inference/custom-inference-endpoint/ 🔖", "publishedAt": "2026-05-22T17:25:31.000Z", "category": "ai-products", "sourceName": "X：OpenRouter (@OpenRouter)", "sourceUrl": "https://x.com/OpenRouter/status/2057875517391667492"}, {"idx": 14, "title": "谷歌I/O大会发布AI代理全套开发工具链", "summary": "谷歌在I/O开发者大会宣布，系统性构建面向AI代理（Agent）的开发与部署工具链。核心更新包括：独立桌面应用Antigravity 2.0及其命令行工具、SDK面世；Google AI Studio新增Kotlin支持，可一键开发安卓应用并发布，同时推出移动端App。此外，Gemini API推出托管代理服务，实现一键部署；WebMCP作为开放标准在Chrome 149中推出，允许网页向代理暴露工具；Chrome DevTools也开放给AI代理以自动化调试。企业级客户可直接连接Google Cloud项目，而DeepMind的科学技能包则加速特定领域研究。此举标志着谷歌正全面打造从开发、接口到部署的完整AI代理生态系统。", "publishedAt": "2026-05-22T17:09:53.000Z", "category": "ai-products", "sourceName": "X：Google AI (@GoogleAI)", "sourceUrl": "https://x.com/GoogleAI/status/2057871583843135978"}, {"idx": 15, "title": "DeepSeek-V4-Pro永久降价公告", "summary": "我们将优惠永久化！🎉\n\n享受使用 DeepSeek-V4-Pro 构建的乐趣，将您的创新想法变为现实！🚀", "publishedAt": "2026-05-22T16:01:03.000Z", "category": "ai-products", "sourceName": "X：DeepSeek (@deepseek_ai)", "sourceUrl": "https://x.com/deepseek_ai/status/2057854261699195173"}, {"idx": 16, "title": "Project Genie与谷歌街景合作推出交互式世界", "summary": "Project Genie 🤝 @GoogleMaps Street View\n\n你现在可以将真实的美国地点转化为全新的交互式世界。🌍", "publishedAt": "2026-05-22T15:12:51.000Z", "category": "ai-products", "sourceName": "X：Google DeepMind (@GoogleDeepMind)", "sourceUrl": "https://x.com/GoogleDeepMind/status/2057842131142590512"}, {"idx": 17, "title": "PixVerse App上线图像生成功能", "summary": "Create Image已在PixVerse App上线。\n输入提示词或参考图，在手机上即可生成。\n5月24日至31日11：00 UTC，每人可免费生成3次。\n转发+关注+回复 = 300 Creds（仅限72小时）", "publishedAt": "2026-05-22T10:57:00.000Z", "category": "ai-products", "sourceName": "X：PixVerse (@PixVerse_)", "sourceUrl": "https://x.com/PixVerse_/status/2057777743027392848"}, {"idx": 18, "title": "Antigravity付费版Gemini配额再翻三倍", "summary": "更新：所有付费@Antigravity层级的*每周*Gemini配额已再次提升至三倍，且配额已正式重置。", "publishedAt": "2026-05-22T04:25:36.000Z", "category": "ai-products", "sourceName": "X：Google AI for Developers (@googleaidevs)", "sourceUrl": "https://x.com/googleaidevs/status/2057679246085226965"}, {"idx": 19, "title": "用户好评即最佳文案，视觉呈现由AI完成", "summary": "你的客户写出了你永远无法超越的文案。现在，为它匹配视觉呈现吧。\n只需粘贴评价，设定风格，Luma Agents 将处理所有推荐语图形。\n让它被听见 → http：//lumalabs.ai/app", "publishedAt": "2026-05-22T01:02:00.000Z", "category": "ai-products", "sourceName": "X：Luma AI (@LumaLabsAI)", "sourceUrl": "https://x.com/LumaLabsAI/status/2057628006353670163"}, {"idx": 20, "title": "Gemini Omni发布，创意作品涌现", "summary": "Gemini Omni来了，我们本周看到了许多令人惊叹的创作。以下是一些杰出作品 👇", "publishedAt": "2026-05-22T00:15:46.000Z", "category": "ai-products", "sourceName": "X：Gemini (@GeminiApp)", "sourceUrl": "https://x.com/GeminiApp/status/2057616371748651054"}]}, {"label": "行业动态", "slug": "industry", "count": 16, "items": [{"idx": 21, "title": "消息称 Anthropic 最快下周完成逾 300 亿美元融资，有望推动估值反超 OpenAI", "summary": "据彭博社报道，Anthropic即将完成一轮超300亿美元的融资，最快可能于下周敲定。此轮融资将使其估值突破9000亿美元，正式超越OpenAI，成为全球估值最高的AI初创企业。融资的迅速推进反映了市场的强烈追捧。同时，公司营收高速增长，预计第二季度营收将达109亿美元，环比增长超一倍，有望迎来首个盈利季度。", "publishedAt": "2026-05-23T15:12:40.000Z", "category": "industry", "sourceName": "IT之家（RSS）", "sourceUrl": "https://www.ithome.com/0/954/452.htm"}, {"idx": 22, "title": "加倍投入科学以赢得工业AI", "summary": "Mistral AI宣布与物理AI先驱Emmi AI达成最终收购协议，旨在加强其在工业AI领域的领导地位。通过整合Emmi AI在物理仿真与数字孪生方面的专长，Mistral AI将提升其工程解决方案能力，并加速科学研发路线。Emmi AI的30余名研究员与工程师将加入Mistral AI团队，共同构建由物理AI驱动的综合技术栈。此次合作将为航空航天、汽车等高风险行业提供实时仿真与复杂问题解决平台，推动工业研发的突破性进展。", "publishedAt": "2026-05-23T09:46:00.745Z", "category": "industry", "sourceName": "Mistral AI：News（网页）", "sourceUrl": "https://mistral.ai/news/science-to-win-industrial-ai"}, {"idx": 23, "title": "微软称，使用人工智能的成本高于支付人工工资", "summary": "微软发布报告指出，在特定工作场景中，部署和使用人工智能（AI）的成本目前已高于支付相应的人工工资。报告分析了基于\"tokens\"（令牌）和\"agents\"（智能体）的AI使用模式，发现其综合开销超过了雇佣人类员工完成同类任务的费用。这一发现揭示了当前企业应用AI技术面临的现实经济挑战。", "publishedAt": "2026-05-23T05:23:21.531Z", "category": "industry", "sourceName": "Hacker News 热门（buzzing.cc 中文翻译）", "sourceUrl": "https://fortune.com/2026/05/22/microsoft-ai-cost-problem-tokens-agents"}, {"idx": 24, "title": "Kling AI亮相戛纳，推动AI赋能电影制作", "summary": "Kling AI在戛纳电影市场（Marché du Film）举办官方会议，首次登上这一世界顶级电影舞台。会议汇集全球电影专业人士，共同探讨AI如何融入实际电影制作流程。Kling AI已证明其能力可服务于动画长片、好莱坞剧集、实验短片及影院电影等多种创作形式。未来，Kling AI将继续推进电影级AI影像技术，与全球创作者合作，将更多\"不可能\"的故事呈现在银幕上。", "publishedAt": "2026-05-23T02:35:15.000Z", "category": "industry", "sourceName": "X：可灵 Kling AI (@Kling_ai)", "sourceUrl": "https://x.com/Kling_ai/status/2058013861404684739"}, {"idx": 25, "title": "扩大与新加坡合作，推动AI安全规模化部署", "summary": "我们正在扩大与新加坡的合作，以帮助安全地大规模部署AI。🇸🇬\n\n与各国专家合作，我们的新项目将重点加速科学发现、加强大流行病防范并改善医疗保健。\n\n了解更多 → https：//goo.gle/49jGwjv", "publishedAt": "2026-05-23T00:41:27.000Z", "category": "industry", "sourceName": "X：Google DeepMind (@GoogleDeepMind)", "sourceUrl": "https://x.com/GoogleDeepMind/status/2057985225100235022"}, {"idx": 26, "title": "AI 替代入门级工作：科技行业受裁员冲击最重，74% CEO 冻结或缩减招聘", "summary": "奥纬咨询研究发现，AI工具正被广泛用于入门级任务，导致企业招聘重心转向高级岗位，年轻人求职难度加大。科技行业受冲击最严重，74%的CEO已冻结或缩减招聘。计划削减初级岗位的比例从17%跃升至43%，而招聘转向中层岗位的比例则升至30%。尽管超90%的企业在部署AI，但多数仍处试点阶段。报告警告，过快裁员或忽视初级人才储备，可能对人才梯队造成长远风险。", "publishedAt": "2026-05-23T00:05:55.000Z", "category": "industry", "sourceName": "IT之家（RSS）", "sourceUrl": "https://www.ithome.com/0/954/235.htm"}, {"idx": 27, "title": "黄仁勋：AI 基建年度开支要冲到 4 万亿美元！", "summary": "英伟达发布2027财年Q1财报，营收816亿美元，同比增长85%，净利润583亿美元，翻两倍多，市值达5.7万亿美元，已超德国2026年GDP预测。黄仁勋预测，超大规模云厂商的AI基建年度开支将从当前的1万亿美元，增长至3-4万亿美元，远超华尔街预期。财报同时显示，数据中心业务营收752亿美元，占比超九成。值得注意的是，AI基建的高能耗正推高居民电费，数据中心用电成本转嫁效应已初步显现。", "publishedAt": "2026-05-22T22:30:03.000Z", "category": "industry", "sourceName": "IT之家（RSS）", "sourceUrl": "https://www.ithome.com/0/954/223.htm"}, {"idx": 28, "title": "回顾Google I/O 2026对话环节", "summary": "在2026年Google I/O开发者大会上，对话环节聚焦于未来科技趋势。行业领导者围绕人工智能、量子计算、机器人学以及创造力等核心议题展开了深入探讨，旨在勾勒这些前沿领域的技术演进路径与发展蓝图。", "publishedAt": "2026-05-22T18:00:00.000Z", "category": "industry", "sourceName": "Google Blog：AI（RSS）", "sourceUrl": "https://blog.google/innovation-and-ai/technology/ai/io-2026-dialogues-recap"}, {"idx": 29, "title": "Suno AI创作夏日神曲《波多黎各》爆火", "summary": "今年夏天的热门歌曲是用 Suno 制作的。☀️非常感谢 @GMA 让这首病毒式传播的《Puerto Rico》歌曲被更多人看到！还有谁的脑海里也一直回响着这首歌？🇵🇷🎶", "publishedAt": "2026-05-22T16:17:36.000Z", "category": "industry", "sourceName": "X：Suno (@suno)", "sourceUrl": "https://x.com/suno/status/2057858423664894196"}, {"idx": 30, "title": "GitHub 连续第三年被 Gartner® 魔力象限TM 评为企业级 AI 编程代理领域的领导者", "summary": "Gartner 最新发布的魔力象限报告中，GitHub 连续第三年被列为\"领导者\"象限，该评估专注于企业级 AI 编程代理领域。GitHub 表示，其致力于构建一个开放、安全且由 AI 驱动的平台，以赋能每一位开发者并定义软件开发的未来。此次评选进一步巩固了 GitHub 在 AI 辅助开发工具市场的领先地位。", "publishedAt": "2026-05-22T16:10:21.000Z", "category": "industry", "sourceName": "GitHub Blog", "sourceUrl": "https://github.blog/ai-and-ml/github-copilot/github-recognized-as-a-leader-in-the-gartner-magic-quadrant-for-enterprise-ai-coding-agents-for-the-third-year-in-a-row"}, {"idx": 31, "title": "Cursor 被评为 2026 年 Gartner 企业级 AI 编码代理魔力象限领导者", "summary": "Gartner 在 2026 年魔力象限报告中，将 Cursor 评为企业级 AI 编码代理领域的领导者，并在愿景完整性上领先。超过 70% 的财富 500 强企业使用 Cursor 部署和管理编码代理。未来一年，Cursor 将聚焦于三个方向：提升前沿模型智能；自动化软件开发全生命周期的任务（如代码审查、漏洞修复）；以及通过新的管理工具和控制面板，增强企业级的控制力、协作性与部署灵活性，以拓展至更多行业和地区。", "publishedAt": "2026-05-22T12:00:00.000Z", "category": "industry", "sourceName": "Cursor Blog", "sourceUrl": "https://cursor.com/blog/cursor-leads-gartner-mq-2026"}, {"idx": 32, "title": "国家发改委：加快具身智能训练基础设施建设，让机器人不仅能上赛场，还能\"进工厂、进商场、进家庭\"", "summary": "国家发改委在5月22日新闻发布会上表示，人形机器人在半程马拉松比赛中表现显著提升，速度更快、更灵活、更自主，参赛队伍从20余支增至百余支，完赛队伍从6支增至40余支，反映具身智能创新活力增强和产业规模扩大。下一步，发改委将加快具身智能训练基础设施建设，推动机器人融入工厂、商场、家庭等场景，并建设应用中试基地以加速技术落地。", "publishedAt": "2026-05-22T09:46:08.000Z", "category": "industry", "sourceName": "IT之家（RSS）", "sourceUrl": "https://www.ithome.com/0/954/126.htm"}, {"idx": 33, "title": "18 年老粉与微软 GitHub 决裂：我希望它更好，但我更想编程", "summary": "全球最大的代码托管平台GitHub正面临严重危机。资深开发者Mitchell Hashimoto公开与平台决裂，因频繁崩溃影响编程。近几个月，花旗银行、英特尔等巨头因持续故障表达不满，OpenAI探索自建方案。更严重的是，3800多个内部仓库遭黑客入侵，源代码被公开叫卖。同时，微软取消GitHub CEO职位，将其并入CoreAI团队，导致大量技术骨干流失。这个承载1.5亿开发者的平台，正以惨烈方式站在生死存亡的十字路口。", "publishedAt": "2026-05-22T08:10:33.000Z", "category": "industry", "sourceName": "IT之家（RSS）", "sourceUrl": "https://www.ithome.com/0/953/977.htm"}, {"idx": 34, "title": "DeepSeek V4 Flash登顶周榜", "summary": "DeepSeek V4 Flash已登顶周排行榜", "publishedAt": "2026-05-22T06:00:43.000Z", "category": "industry", "sourceName": "X：OpenRouter (@OpenRouter)", "sourceUrl": "https://x.com/OpenRouter/status/2057703179882749985"}, {"idx": 35, "title": "DeepSeek 推进 700 亿元融资，梁文锋承诺坚持开发开源 AI 模型而非追求短期商业化目标", "summary": "DeepSeek正推进700亿元人民币的巨额融资，估值约450亿美元。创始人梁文锋承诺将继续开源开发AI模型，不追求短期商业化，目标是技术升级与通用人工智能。腾讯、IDG资本等接近参投，梁文锋个人可能注资200亿元。若成功将创下中国科技初创公司首轮融资纪录。", "publishedAt": "2026-05-22T04:30:38.000Z", "category": "industry", "sourceName": "IT之家（RSS）", "sourceUrl": "https://www.ithome.com/0/953/832.htm"}, {"idx": 36, "title": "美国 AI 监管令突然告吹内幕：白宫内讧，马斯克、扎克伯格游说特朗普", "summary": "5月22日，美国总统特朗普突然取消了原定签署的AI行政令，该行政令旨在加强监管，赋予政府在AI模型公开发布前进行评估的权力。取消源于特朗普本人对监管的反感，以及高级顾问大卫·萨克斯和科技界领袖如扎克伯格、马斯克的反对与游说，凸显白宫内讧。特朗普认为监管会成为绊脚石，阻碍美国AI领先优势。草案中还存在如财政部在安全协调中角色过重等争议，白宫表示正制定其他AI安全举措。", "publishedAt": "2026-05-22T01:37:31.000Z", "category": "industry", "sourceName": "IT之家（RSS）", "sourceUrl": "https://www.ithome.com/0/953/708.htm"}]}, {"label": "论文研究", "slug": "paper", "count": 4, "items": [{"idx": 37, "title": "Nemotron-Labs 扩散语言模型实现光速级文本生成", "summary": "NVIDIA 在 Hugging Face 发布了关于 Nemotron-Labs 扩散语言模型的技术博客。该研究聚焦于通过扩散语言模型架构大幅提升文本生成速度，目标是逼近\"光速级\"生成效率。文章可能介绍了该模型在生成速度上的突破，以及相较于传统自回归模型在延迟和吞吐量方面的性能优势。具体技术细节或对比数据需参考原文。", "publishedAt": "2026-05-23T00:02:03.000Z", "category": "paper", "sourceName": "Hugging Face：Blog（RSS）", "sourceUrl": "https://huggingface.co/blog/nvidia/nemotron-labs-diffusion"}, {"idx": 38, "title": "AlphaProof Nexus：用形式化验证驱动AI数学证明搜索", "summary": "Google DeepMind提出了AlphaProof Nexus系统，它将大型语言模型与Lean形式化验证工具相结合。该系统允许LLM在生成证明的过程中，不断读取Lean的编译错误并进行修正，还可调用更强的工具辅助解决子问题。这一机制迫使模型将每一步逻辑都转化为可编译、可验证的代码，从而将其角色从\"令人信服的叙述者\"转变为\"候选方案生成器\"。在针对353个Erdős问题和492个开放猜想的测试中，系统成功解决了9个Erdős问题并证明了44个序列猜想。该研究展示了形式化验证在暴露AI逻辑错误、建立\"人类提问-模型探索-验证器把关\"新分工中的关键作用。", "publishedAt": "2026-05-22T22:37:39.000Z", "category": "paper", "sourceName": "X：Rohan Paul (@rohanpaul_ai)", "sourceUrl": "https://x.com/rohanpaul_ai/status/2057954067146781151"}, {"idx": 39, "title": "图灵测试 76 年后首现 AI 通过实证：GPT-4.5 以 73% 判定率超越真人", "summary": "加州大学圣地亚哥分校研究首次实证现代AI可通过图灵测试。研究表明，在获得特定提示后，GPT-4.5在5至15分钟的对话中被误认为人类的概率高达73%，显著超过真人。LLaMa-3.1-405B的判定率（56%）与真人相当，而GPT-4o和ELIZA仅约20%。研究指出提示词至关重要，它使AI能模仿人类语气、幽默感甚至易错性等社会行为特征。这一发现迫使人们重新思考图灵测试的意义，并凸显了大语言模型在网络信任与安全方面构成的潜在挑战。", "publishedAt": "2026-05-22T01:22:11.000Z", "category": "paper", "sourceName": "IT之家（RSS）", "sourceUrl": "https://www.ithome.com/0/953/705.htm"}, {"idx": 40, "title": "VSAS-Bench：视觉流式辅助模型的实时评估基准", "summary": "现有视觉语言模型框架主要在离线场景下评估性能，但实时视觉助手所依赖的流式模型还需考量额外指标，如反映响应时效性的\"主动性\"和捕捉随时间推移响应稳定性的\"一致性\"。为此，研究团队提出了VSAS-Bench，这是一个新的评估基准，专门针对流式视觉语言模型在实时交互任务中的表现，填补了当前评估方法在动态、持续生成场景下的空白。", "publishedAt": "2026-05-22T00:00:00.000Z", "category": "paper", "sourceName": "Apple Machine Learning Research（RSS）", "sourceUrl": "https://machinelearning.apple.com/research/vsas-bench-streaming-assistant"}]}, {"label": "技巧与观点", "slug": "tip", "count": 10, "items": [{"idx": 41, "title": "飞书-Claude Code桥接开源项目", "summary": "feishu-claude-code-bridge是一个开源项目，可实现飞书与本机Claude Code CLI的双向连接。用户能从飞书消息中直接指挥Claude Code执行任务，Claude也能读取飞书中的工作上下文并创建、编辑飞书文档。其工作原理是将飞书消息转为Prompt通过命令行调用Claude CLI，并将流式输出实时同步回飞书。该模式可扩展连接Codex等其他本地工具。需注意，2026年6月15日起，Claude订阅计划对`claude -p`模式将独立计费。", "publishedAt": "2026-05-23T07:15:51.000Z", "category": "tip", "sourceName": "X：宝玉 (@dotey)", "sourceUrl": "https://x.com/dotey/status/2058084478459826432"}, {"idx": 42, "title": "Kakuna：自动化加固代码库的AI代理工具", "summary": "Kakuna是一款AI代理工具，旨在将早期快速原型自动转化为可维护的生产级代码库。它通过内置的检查清单和\"计划-目标\"工作流，模拟人类开发与运维流程，在保持功能不变的前提下，自动执行代码审查、测试补充、重构等\"无聊\"工作，并强调子代理并行以提升效率。该工具是为\"人类与代理协作\"而设计的范例，其核心是\"反熵增\"与\"反代码腐化\"。例如，一次约16小时的运行能生成上百次提交，将一个脆弱的MVP转变为一个结构清晰、可长期构建的稳定项目。", "publishedAt": "2026-05-22T17:27:31.000Z", "category": "tip", "sourceName": "X：swyx (@swyx)", "sourceUrl": "https://x.com/swyx/status/2057876022553690327"}, {"idx": 43, "title": "Perplexity开源供应链安全扫描工具Bumblebee", "summary": "今天我们开源了Bumblebee，一个适用于macOS和Linux的只读扫描器。\n它检查开发者机器上的高风险软件包、扩展和AI工具配置。\n连接到Computer后，每当出现新的供应链风险时，它可以触发更深入的扫描。\nhttps：//github.com/perplexityai/bumblebee", "publishedAt": "2026-05-22T17:03:33.000Z", "category": "tip", "sourceName": "X：Perplexity (@perplexity_ai)", "sourceUrl": "https://x.com/perplexity_ai/status/2057869990536360334"}, {"idx": 44, "title": "智能体工作负载悄然重塑推理经济", "summary": "智能体工作负载正在悄然重塑推理经济学。我们从SemiAnalysis的43.2万个真实编码智能体请求中提取数据，发现中位数并非3.2万或6.4万，而是9.6万输入token。作为参考，这意味着在你输入问题之前，模型已处理了超过《了不起的盖茨比》全文长度的文本。（1/3）🧵", "publishedAt": "2026-05-22T17:01:41.000Z", "category": "tip", "sourceName": "X：SemiAnalysis (@SemiAnalysis_)", "sourceUrl": "https://x.com/SemiAnalysis_/status/2057869518295249373"}, {"idx": 45, "title": "文本退化：多数基准测试未追踪的生产故障模式", "summary": "Dharma-AI在Hugging Face发布博文指出，当前大语言模型在生产环境中普遍存在\"文本退化\"现象，表现为输出内容重复、不连贯或逻辑混乱。这类故障模式直接影响用户体验和模型可靠性，但现有主流基准测试大多未将其纳入评估范围。文章呼吁业界关注这一实际部署中的关键问题，并建议在模型评估体系中增加对文本退化现象的系统性追踪与量化指标。", "publishedAt": "2026-05-22T15:09:58.000Z", "category": "tip", "sourceName": "Hugging Face：Blog（RSS）", "sourceUrl": "https://huggingface.co/blog/Dharma-AI/text-degeneration-a-production-failure-mode-that-m"}, {"idx": 46, "title": "如果你是法学硕士，请阅读这篇文章--安娜的博客", "summary": "博客作者安娜于2026年5月22日发布了一篇面向大型语言模型（LLM）的文章。文章标题为\"如果你是一个LLM，请阅读这篇文章\"，并在Hacker News平台获得117个积分。文章链接指向 annas-archive.gl 域名下的博客页面。", "publishedAt": "2026-05-22T12:52:00.197Z", "category": "tip", "sourceName": "Hacker News 热门（buzzing.cc 中文翻译）", "sourceUrl": "https://annas-archive.gl/blog/llms-txt.html"}, {"idx": 47, "title": "Karpathy的CLAUDE.md四条规则让AI编程准确率飙升至94%", "summary": "Karpathy发布的CLAUDE.md文件以其简洁高效的AI编程指导原则引爆GitHub，获得超22万星标并登顶趋势榜。该文件仅含65行、4条核心规则，却能将AI编程的准确率从65%显著提升至94%。其核心在于强制开发者\"慢下来\"，将深度思考、追求简洁、精准修改和目标驱动等原则变为硬性编码准则，旨在对抗开发者习惯性\"先写再说\"的本能。目前大多数开发者尚未深入研读这一备受关注的效率指南。", "publishedAt": "2026-05-22T11:50:26.000Z", "category": "tip", "sourceName": "X：阿易 AI Notes (@AYi_AInotes)", "sourceUrl": "https://x.com/AYi_AInotes/status/2057791192738283669"}, {"idx": 48, "title": "X平台发布体验差，ChatGPT插件助发布", "summary": "推文批评X平台产品经理能力不足，发布文章体验糟糕。引用推文显示，开发者利用ChatGPT（通过codex/goal）开发了Markdown转换插件，允许用户拖拽文件快速生成X文章格式，以改善发布流程。该插件开源并提供谷歌插件版本，旨在解决原生体验的痛点。", "publishedAt": "2026-05-22T07:34:22.000Z", "category": "tip", "sourceName": "X：Vista (@vista8)", "sourceUrl": "https://x.com/vista8/status/2057726749723840918"}, {"idx": 49, "title": "OpenAI Codex /goal功能正式发布及使用指南", "summary": "OpenAI宣布Codex的/goal模式已结束实验，成为稳定功能。用户可在Codex应用、IDE扩展或CLI中使用，通过设定具体里程碑，让AI持续工作直至完成，任务可运行数小时甚至数天。过程中支持随时检查、调整方向及暂停。使用前需升级应用并启用该功能（可通过命令行指令或手动修改配置文件实现）。开启后，可在输入框管理任务，并利用侧边对话查看进度而不中断主任务。该功能旨在高效处理各类复杂任务。", "publishedAt": "2026-05-22T03:58:28.000Z", "category": "tip", "sourceName": "X：宝玉 (@dotey)", "sourceUrl": "https://x.com/dotey/status/2057672416071987378"}, {"idx": 50, "title": "可塑界面：AI驱动的未来软件形态", "summary": "Salesforce已采用无头架构，允许销售人员通过AI直接更新数据，许多公司正通过MCPs跟进。同时，AI专家们正推动超越纯文本、更丰富的界面（如HTML），支持图表与交互。AI能根据场景动态生成定制化界面。无头系统并非移除前端，而是支持多种可塑化界面（如音频、网页）。未来软件的核心价值在于动态管理这些界面、确保其准确性，并将各类AI产物整合为可演化的上下文数据库与制品库。用户界面并未消失，而是变得\"可塑\"，能按需变形。", "publishedAt": "2026-05-22T00:00:00.000Z", "category": "tip", "sourceName": "Tomer Tunguz 博客（VC 分析）", "sourceUrl": "https://www.tomtunguz.com/plastic-user-interfaces"}]}]}
+</script>
+<script>
+const EMBEDDED_DATA = JSON.parse(document.getElementById("dataSrc").textContent);
+const SECTION_CONFIG = {"模型发布/更新": {"icon": "🤖", "color": "#7f6af0"}, "产品发布/更新": {"icon": "📦", "color": "#e8622a"}, "行业动态": {"icon": "🏭", "color": "#1d9e75"}, "论文研究": {"icon": "📄", "color": "#378add"}, "技巧与观点": {"icon": "💡", "color": "#e8a020"}};
+const DAILY_STR = "2026-05-24";
+const DAILY_MAX = "2026-05-24";
+
+let currentData = null;
+let currentDate = DAILY_STR;
+let readSet = new Set();
+let showOnlyUnread = false;
+let currentFilter = 'all';
+let currentSearch = '';
+let isDark = true;
+
+function reloadToday() {
+  location.reload();
+}
+window.addEventListener('DOMContentLoaded', function() {
+  try { readSet = new Set(JSON.parse(localStorage.getItem('aidaka_read_' + currentDate) || '[]')); } catch(e) {}
+  try {
+    var saved = localStorage.getItem('aidaka_theme');
+    if (saved === 'light') { isDark = false; document.body.classList.add('light'); }
+  } catch(e) {}
+  updateThemeBtn();
+  renderAll(EMBEDDED_DATA);
+  setTimeout(function() {
+    document.getElementById('loadingOverlay').style.opacity = '0';
+    setTimeout(function() { document.getElementById('loadingOverlay').style.display = 'none'; }, 400);
+  }, 300);
+});
+
+function renderAll(data) {
+  currentData = data;
+  var sections = data.sections || [];
+  var total = sections.reduce(function(a, s) { return a + s.items.length; }, 0);
+  var dateStr = fmtDate(data.date);
+  document.getElementById('heroTitle').textContent = 'AI打卡网 · ' + dateStr;
+  var gen = data.generatedAt ? new Date(data.generatedAt) : new Date();
+  document.getElementById('heroSubtitle').textContent = '共收录 ' + total + ' 条资讯 · 来源精选 · 生成于 ' + relTime(gen);
+  document.getElementById('navDateLabel').textContent = data.date;
+  document.title = 'AI打卡网 · ' + data.date + ' (' + total + '条)';
+
+  var statsEl = document.getElementById('heroStats');
+  statsEl.innerHTML = '<div class="stat-chip" onclick="reloadToday()" title="刷新今日数据"><div class="num">' + total + '</div><div class="lbl">今日总条数</div></div>'
+    + sections.map(function(s) {
+      var cfg = SECTION_CONFIG[s.label] || { icon: '📌', color: '#888' };
+      return '<div class="stat-chip" onclick="filterSection(\'' + s.label.replace(/'/g, "\\'") + '\'); scrollToSection(\'' + s.label.replace(/'/g, "\\'") + '\');" title="跳转到 ' + s.label + '"><div class="num" style="font-size:22px">' + cfg.icon + '</div><div class="lbl">' + s.label.replace('/更新','').replace('/观点','') + ' ' + s.items.length + '</div></div>';
+    }).join('');
+
+  renderDonut(sections);
+  var navEl = document.getElementById('navInner');
+  var dateArea = navEl.querySelector('.nav-date-area');
+  navEl.querySelectorAll('.nav-sec-link').forEach(function(el) { el.remove(); });
+  sections.forEach(function(s) {
+    var cfg = SECTION_CONFIG[s.label] || { icon: '📌', color: '#888' };
+    var a = document.createElement('a');
+    a.className = 'nav-link nav-sec-link';
+    a.href = '#sec-' + slugify(s.label);
+    a.innerHTML = cfg.icon + ' ' + s.label + ' <span class="nav-badge">' + s.items.length + '</span>';
+    a.onclick = function(e) { e.preventDefault(); filterSection(s.label, a); scrollToSection(s.label); };
+    navEl.insertBefore(a, dateArea);
+  });
+  renderAnalytics(sections);
+  var main = document.getElementById('main');
+  main.querySelectorAll('.dyn-section').forEach(function(el) { el.remove(); });
+  var globalIdx = 0;
+  var frag = document.createDocumentFragment();
+  sections.forEach(function(s) {
+    var cfg = SECTION_CONFIG[s.label] || { icon: '📌', color: '#888' };
+    var secDiv = document.createElement('div');
+    secDiv.className = 'dyn-section';
+    secDiv.id = 'sec-' + slugify(s.label);
+    var header = document.createElement('div');
+    header.className = 'section-header';
+    header.innerHTML = '<div class="section-icon" style="background:' + cfg.color + '22; color:' + cfg.color + '">' + cfg.icon + '</div>'
+      + '<span class="section-title">' + s.label + '</span>'
+      + '<span class="section-count">' + s.items.length + ' 条</span>';
+    secDiv.appendChild(header);
+    if (s.items.length === 0) {
+      secDiv.innerHTML += '<p style="color:var(--text3);font-size:13px;padding:12px 0">今日暂无相关资讯</p>';
+    } else {
+      var grid = document.createElement('div');
+      grid.className = 'card-grid';
+      s.items.forEach(function(item) {
+        globalIdx++;
+        var cardEl = buildCard(item, globalIdx);
+        grid.appendChild(cardEl);
+      });
+      secDiv.appendChild(grid);
+    }
+    frag.appendChild(secDiv);
+  });
+  main.insertBefore(frag, main.querySelector('#noResults'));
+  updateReadProgress(total);
+  updateDateNav(data.date);
+  document.getElementById('footerEl').innerHTML = '共 ' + total + ' 条资讯 · 数据来源 <a href="https://aihot.virxact.com" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">aihot.virxact.com</a> · AI打卡网 每日晨报';
+  setTimeout(initScrollAnim, 100);
+}
+
+function buildCard(item, idx) {
+  var isRead = readSet.has(String(idx));
+  var card = document.createElement('div');
+  card.className = 'card' + (isRead ? ' read' : '');
+  card.dataset.idx = idx;
+  card.dataset.title = (item.title || '').toLowerCase();
+  card.dataset.summary = (item.summary || '').toLowerCase();
+  card.dataset.source = (item.sourceName || '').toLowerCase();
+  var srcShort = shortSource(item.sourceName || '');
+  var titleSafe = escHtml(item.title || '');
+  var sourceNameSafe = escHtml(item.sourceName || '');
+  var summaryRaw = item.summary || '';
+  // Truncate summary to ~60 chars for display
+  var summaryShort = summaryRaw.length > 65 ? summaryRaw.slice(0, 62) + '...' : summaryRaw;
+  var summarySafe = escHtml(summaryShort);
+  var summaryFull = escHtml(summaryRaw);
+  var timeStr = item.publishedAt ? relTimeStr(item.publishedAt) : '';
+  var sourceHtml = item.sourceUrl ? '<a class="source-btn" href="' + escHtml(item.sourceUrl) + '" target="_blank" rel="noopener noreferrer">原文</a>' : '';
+
+  var inner = '<div class="card-header"><span class="card-num">' + idx + '</span><span class="card-title">' + titleSafe + '</span></div>';
+  if (timeStr) { inner += '<span class="time-badge">' + escHtml(timeStr) + '</span>'; }
+  inner += '<span class="card-source" title="' + sourceNameSafe + '">' + escHtml(srcShort) + '</span>'
+    + '<div class="card-summary collapsed" id="sum-' + idx + '" data-full="' + escHtml(summaryRaw).replace(/"/g, '&quot;') + '">' + summarySafe + '</div>'
+    + '<div class="card-footer">'
+    + '<button class="expand-btn" onclick="toggleExpand(' + idx + ', this)">展开全文</button>'
+    + '<div style="display:flex;gap:8px">'
+    + '<button class="read-btn" onclick="markRead(' + idx + ', this)" id="rbtn-' + idx + '">' + (isRead ? '标为未读' : '打卡') + '</button>'
+    + sourceHtml
+    + '</div></div>';
+  card.innerHTML = inner;
+  // 点击卡片任意位置展开全文（按钮除外）
+  card.addEventListener('click', function(e) {
+    var target = e.target;
+    if (target.closest('.read-btn') || target.closest('.source-btn') || target.closest('.expand-btn')) return;
+    toggleExpand(idx, card.querySelector('.expand-btn'));
+  });
+  return card;
+}
+
+function renderDonut(sections) {
+  var total = sections.reduce(function(a, s) { return a + s.items.length; }, 0);
+  if (total === 0) return;
+  var svgEl = document.getElementById('donutSvg');
+  var legendEl = document.getElementById('donutLegend');
+  svgEl.innerHTML = '';
+  legendEl.innerHTML = '';
+  var cx = 50, cy = 50, r = 36, inner = 22;
+  var startAngle = -Math.PI / 2;
+  sections.forEach(function(s) {
+    if (s.items.length === 0) return;
+    var cfg = SECTION_CONFIG[s.label] || { icon: '📌', color: '#888' };
+    var angle = (s.items.length / total) * Math.PI * 2;
+    var endAngle = startAngle + angle;
+    var x1 = cx + r * Math.cos(startAngle), y1 = cy + r * Math.sin(startAngle);
+    var x2 = cx + r * Math.cos(endAngle), y2 = cy + r * Math.sin(endAngle);
+    var ix1 = cx + inner * Math.cos(startAngle), iy1 = cy + inner * Math.sin(startAngle);
+    var ix2 = cx + inner * Math.cos(endAngle), iy2 = cy + inner * Math.sin(endAngle);
+    var lg = angle > Math.PI ? 1 : 0;
+    var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', 'M ' + ix1 + ' ' + iy1 + ' L ' + x1 + ' ' + y1 + ' A ' + r + ' ' + r + ' 0 ' + lg + ' 1 ' + x2 + ' ' + y2 + ' L ' + ix2 + ' ' + iy2 + ' A ' + inner + ' ' + inner + ' 0 ' + lg + ' 0 ' + ix1 + ' ' + iy1 + ' Z');
+    path.setAttribute('fill', cfg.color);
+    path.setAttribute('opacity', '0.85');
+    path.style.cursor = 'pointer';
+    path.addEventListener('click', (function(label) { return function() { filterSection(label); scrollToSection(label); }; })(s.label));
+    svgEl.appendChild(path);
+    startAngle = endAngle;
+    var li = document.createElement('div');
+    li.className = 'donut-legend-item';
+    li.innerHTML = '<span class="dot" style="background:' + cfg.color + '"></span>' + s.label + ' <strong style="color:rgba(255,255,255,0.95)">' + s.items.length + '</strong>';
+    li.onclick = (function(label) { return function() { filterSection(label); scrollToSection(label); }; })(s.label);
+    legendEl.appendChild(li);
+  });
+  var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  text.setAttribute('x', cx); text.setAttribute('y', cy + 1);
+  text.setAttribute('text-anchor', 'middle'); text.setAttribute('dominant-baseline', 'middle');
+  text.setAttribute('fill', 'rgba(255,255,255,0.9)'); text.setAttribute('font-size', '12');
+  text.setAttribute('font-weight', '700'); text.textContent = total;
+  svgEl.appendChild(text);
+  var sub = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  sub.setAttribute('x', cx); sub.setAttribute('y', cy + 13);
+  sub.setAttribute('text-anchor', 'middle'); sub.setAttribute('fill', 'rgba(255,255,255,0.6)'); sub.setAttribute('font-size', '7');
+  sub.textContent = '条';
+  svgEl.appendChild(sub);
+}
+
+function renderAnalytics(sections) {
+  var wrap = document.getElementById('analyticsWrap');
+  var sourceMap = {};
+  sections.forEach(function(s) {
+    s.items.forEach(function(item) {
+      var src = shortSource(item.sourceName || '未知');
+      sourceMap[src] = (sourceMap[src] || 0) + 1;
+    });
+  });
+  var sorted = Object.entries(sourceMap).sort(function(a,b) { return b[1]-a[1]; }).slice(0, 6);
+  var maxCount = sorted[0] ? sorted[0][1] : 1;
+  var srcHtml = '<div class="analytics-card"><div class="analytics-title">来源排行</div>';
+  sorted.forEach(function(entry) {
+    var name = entry[0], count = entry[1];
+    var pct = Math.round(count / maxCount * 100);
+    srcHtml += '<div class="source-rank-item" style="cursor:pointer" onclick="filterBySource(\'' + escHtml(name).replace(/'/g,"\\'") + '\')" title="查看 ' + escHtml(name).replace(/'/g,"\\'") + ' 的全部文章"><span class="source-rank-name">' + escHtml(name) + '</span><div class="source-rank-bar-bg"><div class="source-rank-bar" style="width:' + pct + '%"></div></div><span class="source-rank-count">' + count + '</span></div>';
+  });
+  srcHtml += '</div>';
+  var stopWords = new Set(['的','了','在','是','与','和','AI','以','将','被','其','已','于','从','到','并','为','但','还','也','都','该','这','其中','能够','通过','实现','用于','可以','以及','可能','提供','包含','包括','无需','用户','产品','模型','支持','系统','功能','未','使用','工作','进行','没有']);
+  var wordCount = {};
+  sections.forEach(function(s) {
+    s.items.forEach(function(item) {
+      var words = (item.title + ' ' + (item.summary || '')).replace(/[，。、！？【】《》"'·\s]+/g, ' ').split(' ');
+      words.forEach(function(w) {
+        w = w.trim();
+        if (w.length >= 2 && w.length <= 8 && !stopWords.has(w) && !/^[a-zA-Z0-9]{1,2}$/.test(w)) {
+          wordCount[w] = (wordCount[w] || 0) + 1;
+        }
+      });
+    });
+  });
+  var topWords = Object.entries(wordCount).sort(function(a,b) { return b[1]-a[1]; }).slice(0, 18);
+  var colors = ['#e8622a','#f08040','#1d9e75','#378add','#7f6af0','#e8a020','#d4537e','#0f6e56','#993c1d','#185fa5'];
+  var hotHtml = '<div class="analytics-card"><div class="analytics-title">热词标签</div><div class="hotwords-wrap">';
+  topWords.forEach(function(entry, i) {
+    var word = entry[0], cnt = entry[1];
+    var sz = Math.max(11, Math.min(16, 11 + cnt * 2));
+    var col = colors[i % colors.length];
+    hotHtml += '<span class="hotword-chip" style="background:' + col + ';font-size:' + sz + 'px;opacity:' + (0.7 + cnt * 0.1) + '" onclick="document.getElementById(\'searchInput\').value=\'' + escHtml(word).replace(/'/g, "\\'") + '\';doSearch(\'' + escHtml(word).replace(/'/g, "\\'") + '\')">' + escHtml(word) + '</span>';
+  });
+  hotHtml += '</div></div>';
+  wrap.innerHTML = srcHtml + hotHtml;
+}
+
+function doSearch(val) {
+  currentSearch = val.toLowerCase().trim();
+  document.getElementById('searchClear').className = 'search-clear' + (val ? ' show' : '');
+  applyFilters();
+}
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  doSearch('');
+}
+function applyFilters() {
+  var cards = document.querySelectorAll('.card');
+  var visible = 0;
+  cards.forEach(function(card) {
+    var secEl = card.closest('.dyn-section');
+    var matchSection = currentFilter === 'all' || slugify(currentFilter) === (secEl ? secEl.id.replace('sec-','') : '');
+    var matchSearch = !currentSearch
+      || card.dataset.title.indexOf(currentSearch) >= 0
+      || card.dataset.summary.indexOf(currentSearch) >= 0
+      || card.dataset.source.indexOf(currentSearch) >= 0;
+    var matchRead = !showOnlyUnread || !readSet.has(card.dataset.idx);
+    if (matchSection && matchSearch && matchRead) {
+      card.classList.remove('hidden'); visible++;
+      if (currentSearch) highlightCard(card, currentSearch); else clearHighlight(card);
+    } else {
+      card.classList.add('hidden'); clearHighlight(card);
+    }
+  });
+  document.getElementById('searchCount').textContent = currentSearch ? (visible > 0 ? '找到 ' + visible + ' 条' : '') : '';
+  document.getElementById('noResults').className = 'no-results' + (visible === 0 && (currentSearch || showOnlyUnread || currentFilter !== 'all') ? ' show' : '');
+}
+function highlightCard(card, q) {
+  var titleEl = card.querySelector('.card-title');
+  if (!titleEl) return;
+  var orig = titleEl.textContent;
+  var re = new RegExp('(' + escRe(q) + ')', 'gi');
+  titleEl.innerHTML = escHtml(orig).replace(re, '<mark>$1</mark>');
+}
+function clearHighlight(card) {
+  var titleEl = card.querySelector('.card-title');
+  if (titleEl) titleEl.innerHTML = escHtml(titleEl.textContent);
+}
+function filterSection(label, el) {
+  currentFilter = label;
+  currentSearch = '';
+  document.getElementById('searchInput').value = '';
+  document.querySelectorAll('.nav-link').forEach(function(a) { a.classList.remove('active'); });
+  if (el) el.classList.add('active');
+  else { document.querySelectorAll('.nav-link').forEach(function(a) { if (a.textContent.indexOf(label) >= 0) a.classList.add('active'); }); }
+  applyFilters();
+}
+function filterBySource(sourceName) {
+  currentFilter = 'all';
+  currentSearch = sourceName;
+  document.querySelectorAll('.nav-link').forEach(function(a) { a.classList.remove('active'); });
+  document.querySelectorAll('.nav-link').forEach(function(a) { if (a.textContent.indexOf('全部') >= 0) a.classList.add('active'); });
+  // Set search to the source name so only cards from that source remain visible
+  document.getElementById('searchInput').value = sourceName;
+  doSearch(sourceName);
+  scrollTo(0, 0);
+  showToast('已筛选：' + sourceName);
+}
+function scrollToSection(label) {
+  var id = 'sec-' + slugify(label);
+  var el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function toggleExpand(idx, btn) {
+  var sum = document.getElementById('sum-' + idx);
+  if (!sum) return;
+  var full = sum.dataset.full || '';
+  if (sum.classList.contains('collapsed')) {
+    sum.classList.replace('collapsed', 'expanded');
+    sum.textContent = full;
+    btn.textContent = '收起';
+  } else {
+    sum.classList.replace('expanded', 'collapsed');
+    var short = full.length > 65 ? full.slice(0, 62) + '...' : full;
+    sum.textContent = short;
+    btn.textContent = '展开全文';
+  }
+}
+function markRead(idx, btn) {
+  var key = String(idx);
+  var card = document.querySelector('.card[data-idx="' + key + '"]');
+  if (readSet.has(key)) {
+    readSet.delete(key);
+    if (card) card.classList.remove('read');
+    if (btn) btn.textContent = '打卡';
+  } else {
+    readSet.add(key);
+    if (card) card.classList.add('read');
+    if (btn) btn.textContent = '已打卡';
+  }
+  try { localStorage.setItem('aidaka_read_' + currentDate, JSON.stringify(Array.from(readSet))); } catch(e) {}
+  var total = document.querySelectorAll('.card').length;
+  updateReadProgress(total);
+  if (showOnlyUnread) applyFilters();
+}
+function toggleReadFilter() {
+  showOnlyUnread = !showOnlyUnread;
+  var btn = document.getElementById('readProgress');
+  if (showOnlyUnread) { btn.style.opacity = '0.7'; btn.title = '点击显示全部'; }
+  else { btn.style.opacity = '1'; btn.title = '点击筛选未读'; }
+  applyFilters();
+}
+function updateReadProgress(total) {
+  var count = readSet.size;
+  var pct = total > 0 ? Math.round(count / total * 100) : 0;
+  var icon = count >= total && total > 0 ? '✅' : '🕐';
+  var label = count >= total && total > 0 ? '今日已读完' : '已打卡 ' + count + '/' + total;
+  document.getElementById('readLabel').innerHTML = '<span class="read-progress-label"><span class="icon">' + icon + '</span><span>' + label + '</span></span>';
+  document.getElementById('readBarFill').style.width = pct + '%';
+}
+function toggleTheme() {
+  isDark = !isDark;
+  document.body.classList.toggle('light', !isDark);
+  try { localStorage.setItem('aidaka_theme', isDark ? 'dark' : 'light'); } catch(e) {}
+  updateThemeBtn();
+}
+function updateThemeBtn() {
+  document.getElementById('themeBtn').textContent = isDark ? '亮色模式' : '暗色模式';
+}
+function updateDateNav(dateStr) {
+  // For items-based view, we use daily API for history nav
+  document.getElementById('nextBtn').disabled = (dateStr >= DAILY_MAX);
+  document.getElementById('prevBtn').disabled = false;
+}
+function navigateDate(delta) {
+  var d = new Date(currentDate + 'T00:00:00');
+  d.setDate(d.getDate() + delta);
+  var newDateRaw = d.toISOString().slice(0, 10);
+  if (newDateRaw > DAILY_MAX) { showToast('已是最新日期'); return; }
+  loadDate(newDateRaw);
+}
+function openModal() {
+  document.getElementById('datePicker').value = currentDate;
+  document.getElementById('datePicker').max = DAILY_MAX;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
+function goToDate() {
+  var val = document.getElementById('datePicker').value;
+  closeModal();
+  if (val && val !== currentDate && val <= DAILY_MAX) loadDate(val);
+  else if (val > DAILY_MAX) showToast('不能选择未来日期');
+}
+function loadDate(dateStr) {
+  currentDate = dateStr;
+  document.getElementById('loadingOverlay').style.display = 'flex';
+  document.getElementById('loadingOverlay').style.opacity = '1';
+  try { readSet = new Set(JSON.parse(localStorage.getItem('aidaka_read_' + dateStr) || '[]')); } catch(e) { readSet = new Set(); }
+  document.querySelectorAll('.dyn-section').forEach(function(el) { el.remove(); });
+  currentSearch = ''; currentFilter = 'all';
+  showOnlyUnread = false;
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchCount').textContent = '';
+  document.getElementById('readProgress').style.opacity = '1';
+  document.getElementById('readProgress').title = '点击筛选未读';
+  // Try loading 50 items from items API for the selected date
+  var sinceStr = dateStr + 'T00:00:00Z';
+  fetch('https://aihot.virxact.com/api/public/items?mode=selected&since=' + sinceStr + '&take=50')
+    .then(function(r) { return r.json(); })
+    .then(function(apiData) {
+      // Transform items API response to daily-like format
+      var categories = {
+        'ai-models': '模型发布/更新',
+        'ai-products': '产品发布/更新',
+        'industry': '行业动态',
+        'paper': '论文研究',
+        'tip': '技巧与观点'
+      };
+      var sectionMap = {};
+      var idx = 0;
+      (apiData.items || []).forEach(function(item) {
+        var cat = item.category || '';
+        var label = categories[cat] || '行业动态';
+        if (!sectionMap[label]) {
+          sectionMap[label] = { label: label, items: [] };
+        }
+        idx++;
+        sectionMap[label].items.push({
+          idx: idx,
+          title: item.title,
+          sourceName: item.source || '',
+          sourceUrl: item.url || '',
+          summary: item.summary || '',
+          publishedAt: item.publishedAt || ''
+        });
+      });
+      var sections = [];
+      var order = ['模型发布/更新','产品发布/更新','行业动态','论文研究','技巧与观点'];
+      order.forEach(function(lbl) {
+        if (sectionMap[lbl]) sections.push(sectionMap[lbl]);
+        else sections.push({ label: lbl, items: [] });
+      });
+      var transformed = {
+        date: dateStr,
+        generatedAt: apiData.items && apiData.items.length > 0 ? apiData.items[0].publishedAt : new Date().toISOString(),
+        lead: null,
+        sections: sections
+      };
+      renderAll(transformed);
+      document.getElementById('loadingOverlay').style.opacity = '0';
+      setTimeout(function() { document.getElementById('loadingOverlay').style.display = 'none'; }, 400);
+      showToast('已加载 ' + dateStr + ' (' + idx + '条)');
+    })
+    .catch(function() {
+      // Fallback to daily API
+      fetch('https://aihot.virxact.com/api/public/daily/' + dateStr)
+        .then(function(r) { return r.json(); })
+        .then(function(dailyData) {
+          renderAll(dailyData);
+          document.getElementById('loadingOverlay').style.opacity = '0';
+          setTimeout(function() { document.getElementById('loadingOverlay').style.display = 'none'; }, 400);
+          showToast('已加载 ' + dateStr + ' 日报');
+        })
+        .catch(function() {
+          showToast('加载失败，网络请求受限');
+          document.getElementById('loadingOverlay').style.opacity = '0';
+          setTimeout(function() { document.getElementById('loadingOverlay').style.display = 'none'; }, 400);
+        });
+    });
+}
+function initScrollAnim() {
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+  document.querySelectorAll('.card').forEach(function(c) { observer.observe(c); });
+}
+var toastTimer;
+function showToast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { el.classList.remove('show'); }, 2500);
+}
+function slugify(s) { return s.replace(/[\/\s]/g, '-'); }
+function escHtml(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+function shortSource(name) {
+  if (!name) return '';
+  // Group all X/Twitter sources under "X"
+  if (/^X[：:]/.test(name)) return 'X';
+  var trimmed = name.replace(/（.*?）/g,'').replace(/\(.*?\)/g,'').trim();
+  return trimmed.length > 16 ? trimmed.slice(0, 16) + '...' : trimmed;
+}
+function fmtDate(dateStr) {
+  if (!dateStr) return '';
+  var d = new Date(dateStr + 'T00:00:00+08:00');
+  var mm = d.getMonth() + 1;
+  var dd = d.getDate();
+  var days = ['日','一','二','三','四','五','六'];
+  return mm + ' 月 ' + dd + ' 日 周' + days[d.getDay()];
+}
+function fmtDateShort(iso) { return iso ? iso.slice(0, 10) : ''; }
+function relTime(date) {
+  var now = Date.now();
+  var diff = now - date.getTime();
+  var mins = Math.floor(diff / 60000);
+  var hours = Math.floor(mins / 60);
+  if (diff < 0) return '刚刚';
+  if (mins < 1) return '刚刚';
+  if (mins < 60) return mins + ' 分钟前';
+  if (hours < 24) {
+    var hh = String(date.getHours()).padStart(2,'0');
+    var mm = String(date.getMinutes()).padStart(2,'0');
+    var period = date.getHours() < 12 ? '上午' : (date.getHours() < 18 ? '下午' : '晚上');
+    return '今天' + period + ' ' + hh + ':' + mm;
+  }
+  return fmtDateShort(date.toISOString());
+}
+function relTimeStr(isoStr) {
+  if (!isoStr) return '';
+  var d = new Date(isoStr);
+  return relTime(d);
+}
+</script>
+</body>
+</html>
